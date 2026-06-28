@@ -68,9 +68,10 @@ interface AvatarConfig {
   build: "small" | "medium" | "large";
   accessory: "none" | "nerd-glasses" | "full-beard" | …;
   shoes: "sneakers" | "boots" | "dress-shoes" | "clown-shoes" | …;
-  skin: string;       // hex, e.g. "#e0ac69"
-  clothing: string;   // hex
-  background: string; // hex
+  skin: string;          // hex, e.g. "#e0ac69"
+  clothing: string;      // hex — top colour
+  trousersColor: string; // hex — trouser colour
+  background: string;    // hex
   view: "front" | "left" | "right";
 }
 ```

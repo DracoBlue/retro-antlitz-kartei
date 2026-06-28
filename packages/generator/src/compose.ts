@@ -58,10 +58,11 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
       },
       skin,
       clothing,
+      config.trousersColor,
       gx,
     );
   } else {
-    drawTrousers(g, config.trousers, skin);
+    drawTrousers(g, config.trousers, config.trousersColor, skin);
     drawShoes(g, config.shoes, skin);
     drawTop(g, config.top, clothing, skin);
     if (gx === "w") {

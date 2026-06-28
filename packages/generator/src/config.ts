@@ -1,5 +1,5 @@
 import type { AvatarConfig, View } from "./types.js";
-import { PARTS, SKIN, CLOTH, BG, type PartId, type PartKey } from "./palettes.js";
+import { PARTS, SKIN, CLOTH, BG, PANTS, type PartId, type PartKey } from "./palettes.js";
 import { createRng, type Rng } from "./rng.js";
 
 /** The avatar shown before the user changes anything — a plain everyman. */
@@ -16,6 +16,7 @@ export const DEFAULT_CONFIG: Readonly<AvatarConfig> = Object.freeze({
   shoes: "dress-shoes",
   skin: SKIN[2], // #e0ac69
   clothing: CLOTH[2], // #3a86ff
+  trousersColor: PANTS[0], // #2b3a55
   background: BG[1], // #3a86ff
   view: "front",
 });
@@ -52,6 +53,7 @@ export function normalizeConfig(input: Partial<AvatarConfig> = {}): AvatarConfig
     shoes: normPart("shoes", input.shoes),
     skin: normColor(input.skin, DEFAULT_CONFIG.skin),
     clothing: normColor(input.clothing, DEFAULT_CONFIG.clothing),
+    trousersColor: normColor(input.trousersColor, DEFAULT_CONFIG.trousersColor),
     background: normColor(input.background, DEFAULT_CONFIG.background),
     view: typeof input.view === "string" && VIEWS.includes(input.view) ? input.view : DEFAULT_CONFIG.view,
   };
@@ -118,6 +120,7 @@ function buildConfig(rng: Rng): AvatarConfig {
     accessory: pickId(rng, "accessory"),
     // Appended last so existing seeds keep all their other parts unchanged.
     shoes: pickId(rng, "shoes"),
+    trousersColor: pickColor(rng, PANTS),
     view: "front",
   };
 }

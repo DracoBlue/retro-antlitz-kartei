@@ -58,17 +58,8 @@ export const CLOTH = ["#e63946", "#2a9d8f", "#3a86ff", "#f4a261", "#9b5de5", "#0
 /** Selectable background colours (hex). */
 export const BG = ["#ff5d8f", "#3a86ff", "#06d6a0", "#ffd166", "#8338ec", "#fb5607", "#118ab2", "#2b2d42"] as const;
 
-/** Trouser colours, keyed by `trousers` part id (position-independent). */
-export const PANTS: Record<PartId<"trousers">, string> = {
-  "suit-trousers": "#2b3a55",
-  jeans: "#3a6ea5",
-  cargo: "#5a6b4a",
-  shorts: "#c9a14a",
-  "bell-bottoms": "#7a4a8a",
-  sweatpants: "#9aa0a6",
-  lederhosen: "#6b4a2a",
-  plaid: "#b5563a",
-};
+/** Selectable trouser colours (hex). The editor offers these; configs may use any hex. */
+export const PANTS = ["#2b3a55", "#3a6ea5", "#5a6b4a", "#c9a14a", "#7a4a8a", "#9aa0a6", "#6b4a2a", "#b5563a"] as const;
 
 /** The single hair colour used by all hairstyles and beards. */
 export const HAIR = "#33240f";

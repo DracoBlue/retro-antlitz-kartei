@@ -33,8 +33,10 @@ export interface AvatarConfig {
   shoes: PartId<"shoes">;
   /** Skin tone, any `#rrggbb` hex. */
   skin: string;
-  /** Clothing colour, any `#rrggbb` hex. */
+  /** Top / clothing colour, any `#rrggbb` hex. */
   clothing: string;
+  /** Trouser colour, any `#rrggbb` hex. */
+  trousersColor: string;
   /** Background colour, any `#rrggbb` hex. */
   background: string;
   /** Facing direction. */

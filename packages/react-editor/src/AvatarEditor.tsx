@@ -8,6 +8,7 @@ import {
   SKIN,
   CLOTH,
   BG,
+  PANTS,
   DEFAULT_CONFIG,
   normalizeConfig,
   encodeConfig,
@@ -530,6 +531,15 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                 {CLOTH.map((c) => (
                   <button key={c} onClick={() => patch({ clothing: c })} style={swatchBtn(c, config.clothing === c)} />
+                ))}
+              </div>
+            </div>
+
+            <div style={swatchRowStyle}>
+              <span style={swatchLabelStyle}>TROUSERS</span>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                {PANTS.map((c) => (
+                  <button key={c} onClick={() => patch({ trousersColor: c })} style={swatchBtn(c, config.trousersColor === c)} />
                 ))}
               </div>
             </div>

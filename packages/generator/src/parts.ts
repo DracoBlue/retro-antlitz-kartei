@@ -1,7 +1,7 @@
 import type { Ctx2D } from "./types.js";
 import type { PartId } from "./palettes.js";
 import { shade } from "./color.js";
-import { HAIR, PANTS } from "./palettes.js";
+import { HAIR } from "./palettes.js";
 
 /** Part ids the profile view needs, taken straight from the config. */
 export interface SideParts {
@@ -47,8 +47,8 @@ export function clr(g: Ctx2D, x: number, y: number): void {
    Every part switches on its string id, so options can be added or reordered
    without renumbering anything. */
 
-export function drawTrousers(g: Ctx2D, id: PartId<"trousers">, skin: string): void {
-  const PC = PANTS[id];
+export function drawTrousers(g: Ctx2D, id: PartId<"trousers">, color: string, skin: string): void {
+  const PC = color;
   const d = shade(PC, -0.28);
   const hi = shade(PC, 0.18);
   // hips
@@ -522,7 +522,15 @@ export function drawGlasses(g: Ctx2D, id: GlassesId): void {
 /* ---------- shoes (drawn over the bottom of the legs) ---------- */
 
 export function drawShoes(g: Ctx2D, id: PartId<"shoes">, skin: string): void {
-  if (id === "none") return;
+  if (id === "none") {
+    // barefoot — skin toes peeking out at the bottom of each leg
+    const d = shade(skin, -0.25);
+    P(g, 9, 39, 5, 1, skin);
+    P(g, 18, 39, 5, 1, skin);
+    px(g, 12, 39, d);
+    px(g, 21, 39, d);
+    return;
+  }
   shoeFront(g, 9, id, -1, skin); // left foot (leg x9–13)
   shoeFront(g, 18, id, 1, skin); // right foot (leg x18–22)
 }
@@ -580,8 +588,13 @@ const SIDE_SHOE_COLOR: Record<PartId<"shoes">, string> = {
 };
 
 /** Shoes for the profile view (figure faces right; toe points +x). */
-export function drawShoesSide(g: Ctx2D, id: PartId<"shoes">): void {
-  if (id === "none") return;
+export function drawShoesSide(g: Ctx2D, id: PartId<"shoes">, skin: string): void {
+  if (id === "none") {
+    // barefoot — skin feet
+    P(g, 11, 39, 5, 1, shade(skin, -0.2)); // back foot
+    P(g, 15, 39, 6, 1, skin); // front foot + toes
+    return;
+  }
   const c = SIDE_SHOE_COLOR[id];
   const c2 = shade(c, -0.28);
   if (id === "clown-shoes") {
@@ -605,15 +618,15 @@ export function drawShoesSide(g: Ctx2D, id: PartId<"shoes">): void {
 
 /* ---------- side / profile view (faces right; mirrored for left) ---------- */
 
-export function drawSide(g: Ctx2D, s: SideParts, skin: string, cloth: string, gx: "m" | "w" | "n"): void {
+export function drawSide(g: Ctx2D, s: SideParts, skin: string, cloth: string, pants: string, gx: "m" | "w" | "n"): void {
   const sd = shade(skin, -0.22);
   const h = HAIR;
   // legs
-  const PC = PANTS[s.trousers];
+  const PC = pants;
   P(g, 11, 33, 5, 7, shade(PC, -0.2)); // back leg
   P(g, 15, 33, 5, 7, PC); // front leg
   P(g, 11, 33, 9, 2, shade(PC, 0.15)); // hip/belt
-  drawShoesSide(g, s.shoes);
+  drawShoesSide(g, s.shoes, skin);
   // torso
   const suit = s.top === "suit";
   const tcol =
