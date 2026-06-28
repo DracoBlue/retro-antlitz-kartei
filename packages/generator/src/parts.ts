@@ -116,11 +116,11 @@ export function drawTop(g: Ctx2D, id: PartId<"top">, cloth: string, skin: string
   clr(g, 24, 24);
   switch (id) {
     case "suit":
-      P(g, 7, 24, 18, 9, "#2c3144");
+      // jacket keeps the configured `cloth` colour from the base fill
       P(g, 13, 24, 6, 9, "#f4f4f4"); // shirt
       P(g, 15, 25, 2, 6, "#c01622"); // tie
-      P(g, 11, 24, 2, 5, "#2c3144");
-      P(g, 19, 24, 2, 5, "#2c3144"); // lapels
+      P(g, 11, 24, 2, 5, shade(cloth, -0.18)); // lapels
+      P(g, 19, 24, 2, 5, shade(cloth, -0.18));
       px(g, 14, 30, "#d9d9d9");
       break;
     case "shirt":
@@ -147,9 +147,9 @@ export function drawTop(g: Ctx2D, id: PartId<"top">, cloth: string, skin: string
       P(g, 13, 24, 6, 3, shade(cloth, 0.35));
       break;
     case "robe":
-      P(g, 7, 24, 18, 9, "#1c1c22");
-      P(g, 14, 24, 4, 9, "#33333d");
-      P(g, 13, 24, 6, 2, "#5a5a66");
+      // robe keeps the configured `cloth` colour from the base fill
+      P(g, 14, 24, 4, 9, shade(cloth, -0.22)); // front opening
+      P(g, 13, 24, 6, 2, shade(cloth, 0.28)); // collar
       break;
     case "hi-vis-vest":
       P(g, 7, 24, 18, 9, "#ff7a00");
@@ -158,7 +158,7 @@ export function drawTop(g: Ctx2D, id: PartId<"top">, cloth: string, skin: string
       P(g, 13, 24, 6, 9, "#3a3a3a");
       break;
     case "leather-jacket":
-      P(g, 7, 24, 18, 9, "#2a2a30");
+      // jacket keeps the configured `cloth` colour from the base fill
       P(g, 15, 24, 1, 9, "#6a6a72"); // zipper
       P(g, 11, 25, 1, 6, "#6a6a72");
       P(g, 19, 25, 1, 6, "#6a6a72");
@@ -646,16 +646,9 @@ export function drawSide(
   drawShoesSide(g, s.shoes, skin);
   // torso
   const suit = s.top === "suit";
-  const tcol =
-    s.top === "suit"
-      ? "#2c3144"
-      : s.top === "robe"
-        ? "#1c1c22"
-        : s.top === "hi-vis-vest"
-          ? "#ff7a00"
-          : s.top === "leather-jacket"
-            ? "#2a2a30"
-            : cloth;
+  // Only the hi-vis vest keeps a fixed (safety-orange) colour; everything else
+  // follows the configured top colour.
+  const tcol = s.top === "hi-vis-vest" ? "#ff7a00" : cloth;
   P(g, 9, 24, 12, 9, tcol);
   P(g, 9, 24, 12, 1, shade(tcol, 0.2));
   P(g, 8, 25, 1, 8, shade(tcol, -0.3)); // back
