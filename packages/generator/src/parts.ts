@@ -770,8 +770,10 @@ export function drawSide(
   if (s.hair !== "bald") {
     const hc = h; // all styles use the configured hair colour
     if (s.hair === "mohawk") {
-      P(g, 10, 3, 3, 6, hc);
-      P(g, 10, 8, 11, 2, h);
+      // a crest running the length of the head (front → back), standing up
+      P(g, 9, 5, 12, 4, hc); // main fin across the top (x9–20)
+      for (let x = 9; x <= 19; x += 2) P(g, x, 3, 1, 2, hc); // spikes
+      P(g, 9, 5, 12, 1, shade(hc, 0.2)); // highlight
     } else if (s.hair === "receding") {
       P(g, 8, 6, 9, 2, hc); // short top, recedes before the face
       P(g, 8, 8, 2, 2, hc); // upper back
