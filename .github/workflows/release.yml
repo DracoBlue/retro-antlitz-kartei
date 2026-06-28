@@ -10,6 +10,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write
   pull-requests: write
+  id-token: write # OIDC token for npm Trusted Publishing (no NPM_TOKEN needed)
 
 jobs:
   release:
@@ -19,20 +20,22 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
+      # No registry-url here: it would write an empty _authToken to .npmrc and
+      # break OIDC. pnpm publishes to npmjs by default and does the OIDC token
+      # exchange itself (pnpm >= 10.16).
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-          registry-url: "https://registry.npmjs.org"
 
       - run: pnpm install --frozen-lockfile
 
       # Opens/updates a "Version Packages" PR when changesets exist, or
-      # publishes to npm when that PR has been merged (no changesets left).
+      # publishes to npm (via OIDC Trusted Publishing) when that PR has been
+      # merged / no changesets remain.
       - uses: changesets/action@v1
         with:
           version: pnpm changeset:version
           publish: pnpm changeset:release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
