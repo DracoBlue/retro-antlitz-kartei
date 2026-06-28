@@ -98,17 +98,18 @@ pnpm build                                   # packages must be built first
 pnpm --filter @retro-antlitz-kartei/demo dev # local dev server
 ```
 
-**Experimental — describe your avatar (Chrome built-in AI):** the demo has a
-"describe your avatar" bar that uses Chrome's on-device
-[Prompt API](https://developer.chrome.com/docs/ai/prompt-api) (Gemini Nano) to
-turn a text description into a config via structured output (a JSON schema built
-from `PARTS`). You can also **drop or paste a photo** onto the field — the multimodal model is
-asked one focused question per attribute (a single choice from that field's
-allowed values, a few in parallel), which the small on-device model handles far
-better than one big prompt. Colours are offered as names (blonde, navy, …) and
-mapped back to palette hex. Chrome-only; enable
-`chrome://flags/#prompt-api-for-gemini-nano` and let the model download. It lives
-in the demo only — the published packages stay dependency-free.
+**Experimental — magic avatar (Chrome built-in AI):** when Chrome's on-device
+[Prompt API](https://developer.chrome.com/docs/ai/prompt-api) (Gemini Nano) is
+available, a **✨ MAGIC** button appears next to RANDOM and opens a modal where
+you can describe an avatar — or **drop / paste a photo** to recreate someone. A
+typed description is one structured-output call (JSON schema built from `PARTS`);
+an image is answered one focused question per attribute (a single choice from
+that field's allowed values, a few in parallel), which the small model handles
+far better than one big prompt. Colours are offered as names (blonde, navy, …)
+and mapped back to palette hex. The editor exposes only an `onMagic` prop — all
+AI code lives in the demo, so the published packages stay dependency-free.
+Chrome-only; enable `chrome://flags/#prompt-api-for-gemini-nano` and let the
+model download.
 
 ## Releasing
 

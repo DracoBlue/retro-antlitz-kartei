@@ -43,6 +43,8 @@ export interface AvatarEditorProps {
   showCode?: boolean;
   /** Show the seed input. Default `true`. */
   showSeed?: boolean;
+  /** When set, renders a "✨ MAGIC" button next to RANDOM (e.g. to open an AI prompt modal). */
+  onMagic?: () => void;
   /** Inject the pixel web fonts (Press Start 2P + VT323) into `<head>`. Default `true`. */
   loadFonts?: boolean;
   className?: string;
@@ -120,6 +122,7 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
     showCombat = true,
     showCode = true,
     showSeed = true,
+    onMagic,
     loadFonts = true,
     className,
     style,
@@ -589,23 +592,44 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
 
             <div style={dividerStyle} />
 
-            <button
-              onClick={onRandom}
-              style={{
-                fontFamily: t.mono,
-                fontSize: "10px",
-                letterSpacing: "1px",
-                cursor: "pointer",
-                padding: "12px",
-                borderRadius: t.paper ? "3px" : "9px",
-                marginTop: "2px",
-                border: "3px solid " + t.title,
-                background: t.accent,
-                color: "#10131c",
-              }}
-            >
-              &#127922; RANDOM
-            </button>
+            <div style={{ display: "flex", gap: "8px", marginTop: "2px" }}>
+              {onMagic && (
+                <button
+                  onClick={onMagic}
+                  style={{
+                    fontFamily: t.mono,
+                    fontSize: "10px",
+                    letterSpacing: "1px",
+                    cursor: "pointer",
+                    padding: "12px",
+                    borderRadius: t.paper ? "3px" : "9px",
+                    border: "3px solid " + t.title,
+                    background: "#9b5de5",
+                    color: "#fff",
+                    flex: "0 0 auto",
+                  }}
+                >
+                  &#10024; MAGIC
+                </button>
+              )}
+              <button
+                onClick={onRandom}
+                style={{
+                  fontFamily: t.mono,
+                  fontSize: "10px",
+                  letterSpacing: "1px",
+                  cursor: "pointer",
+                  padding: "12px",
+                  borderRadius: t.paper ? "3px" : "9px",
+                  border: "3px solid " + t.title,
+                  background: t.accent,
+                  color: "#10131c",
+                  flex: 1,
+                }}
+              >
+                &#127922; RANDOM
+              </button>
+            </div>
           </div>
         </div>
       </div>
