@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import {
   type AvatarConfig,
   type PartKey,
@@ -66,6 +66,24 @@ const VIEW_OPTIONS: readonly { key: View; name: string }[] = [
   { key: "right", name: "RIGHT" },
 ];
 
+/** Track whether an element is narrower than `breakpoint` px (for responsive layout). */
+function useNarrow(ref: React.RefObject<HTMLElement | null>, breakpoint = 640): boolean {
+  const [narrow, setNarrow] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < breakpoint,
+  );
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect.width ?? 0;
+      if (w > 0) setNarrow(w < breakpoint);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref, breakpoint]);
+  return narrow;
+}
+
 function useControllable<T>(
   controlled: T | undefined,
   initial: T,
@@ -120,7 +138,11 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
   const [codeMsg, setCodeMsg] = useState("");
   const [seedInput, setSeedInput] = useState(seed ?? "");
 
+  const stageRef = useRef<HTMLDivElement>(null);
+  const narrow = useNarrow(stageRef);
+
   const t = theme(layout);
+  const stacked = narrow || t.mainDir === "column";
 
   useEffect(() => {
     if (!loadFonts || typeof document === "undefined") return;
@@ -252,12 +274,13 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
 
   return (
     <div
+      ref={stageRef}
       className={className}
       style={{
         minHeight: "100%",
         width: "100%",
         background: t.stageBg,
-        padding: "24px",
+        padding: narrow ? "10px" : "24px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -295,57 +318,62 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
       <div
         style={{
           width: "100%",
-          maxWidth: t.mainDir === "row" ? "860px" : "540px",
+          maxWidth: narrow ? "100%" : t.mainDir === "row" ? "860px" : "540px",
           background: t.cabinet,
-          border: "4px solid " + t.cabinetBorder,
-          borderRadius: t.radius,
-          boxShadow: "0 18px 50px rgba(0,0,0,.5)" + (t.glow ? ", 0 0 30px " + t.accent + "33" : ""),
+          border: narrow ? "none" : "4px solid " + t.cabinetBorder,
+          borderRadius: narrow ? "10px" : t.radius,
+          boxShadow: narrow ? "none" : "0 18px 50px rgba(0,0,0,.5)" + (t.glow ? ", 0 0 30px " + t.accent + "33" : ""),
           overflow: "hidden",
         }}
       >
         <div
           style={{
             background: t.marqueeBg,
-            padding: "14px",
+            padding: narrow ? "10px" : "14px",
             display: "flex",
-            gap: "12px",
+            gap: narrow ? "8px" : "12px",
             alignItems: "center",
             justifyContent: "center",
-            borderBottom: "3px solid " + t.cabinetBorder,
+            flexWrap: "wrap",
+            borderBottom: narrow ? "none" : "3px solid " + t.cabinetBorder,
           }}
         >
-          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: t.accent, boxShadow: "0 0 8px " + t.accent }} />
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: t.accent, boxShadow: "0 0 8px " + t.accent, flex: "0 0 auto" }} />
           <span
             style={{
               fontFamily: t.mono,
-              fontSize: t.titleText === "WANTED" ? "20px" : "15px",
+              fontSize: t.titleText === "WANTED" ? "20px" : narrow ? "10px" : "15px",
               color: t.title,
-              letterSpacing: "2px",
+              letterSpacing: narrow ? "1px" : "2px",
               textShadow: t.glow ? "0 0 10px " + t.accent : "2px 2px 0 #00000044",
+              textAlign: "center",
+              lineHeight: 1.5,
             }}
           >
             {t.titleText}
           </span>
-          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: t.accent, boxShadow: "0 0 8px " + t.accent }} />
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: t.accent, boxShadow: "0 0 8px " + t.accent, flex: "0 0 auto" }} />
         </div>
 
         <div
           style={{
             display: "flex",
-            flexDirection: t.mainDir,
+            flexDirection: stacked ? "column" : "row",
             gap: "16px",
-            padding: "18px",
-            alignItems: t.mainDir === "row" ? "stretch" : "center",
+            padding: narrow ? "10px" : "18px",
+            alignItems: stacked ? "center" : "stretch",
           }}
         >
           {/* screen card */}
           <div
             style={{
-              flex: t.mainDir === "row" ? "0 0 300px" : "0 0 auto",
+              flex: stacked ? "0 0 auto" : "0 0 300px",
               display: "flex",
               flexDirection: "column",
               gap: "8px",
               alignItems: "center",
+              width: stacked ? "100%" : undefined,
+              maxWidth: "100%",
             }}
           >
             <div
@@ -360,7 +388,12 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
               }}
               onClick={showCombat ? () => setModalOpen(true) : undefined}
             >
-              <AvatarPreview config={config} width={320} height={400} style={{ width: "264px", height: "330px", borderRadius: "3px" }} />
+              <AvatarPreview
+                config={config}
+                width={320}
+                height={400}
+                style={{ width: "264px", maxWidth: "100%", height: "auto", aspectRatio: "320 / 400", borderRadius: "3px" }}
+              />
               <div
                 style={{
                   position: "absolute",
@@ -503,7 +536,7 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
             style={{
               flex: 1,
               minWidth: 0,
-              width: t.mainDir === "column" ? "100%" : "auto",
+              width: stacked ? "100%" : "auto",
               display: "flex",
               flexDirection: "column",
               gap: "9px",

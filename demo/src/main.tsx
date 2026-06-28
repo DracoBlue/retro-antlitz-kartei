@@ -7,7 +7,7 @@ const REPO = "https://github.com/DracoBlue/retro-antlitz-kartei";
 function App(): React.ReactElement {
   return (
     <>
-      <AvatarEditor seed="Ada Lovelace" defaultLayout="kompakt" showLayoutPicker={false} />
+      <AvatarEditor seed="Ada Lovelace" defaultLayout="kompakt" showLayoutPicker={false} style={{ paddingBottom: 40 }} />
       <footer
         style={{
           position: "fixed",
