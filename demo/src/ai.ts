@@ -73,7 +73,8 @@ function buildSchema() {
 
 function systemPrompt(): string {
   const lines = PART_KEYS.map(
-    (k) => `- ${k}: ${PARTS[k].map((id, i) => `${id} (${PART_LABELS[k][i]})`).join(", ")}`,
+    (k) =>
+      `- ${k}: ${PARTS[k].map((id, i) => `${id} (${PART_LABELS[k][i]}${HINTS[id] ? "; " + HINTS[id] : ""})`).join(", ")}`,
   );
   return [
     "You configure a retro pixel-art, full-body avatar from a short description.",
@@ -108,11 +109,22 @@ const NAMED_COLORS: Record<string, string> = {
   cream: "#ffe0bd",
 };
 
-/** Per-field spec: the question label, allowed values, and optional name→hex map. */
+// Short hints for ids whose meaning isn't obvious from the id/label alone.
+const HINTS: Record<string, string> = {
+  receding: "short hair with a receding / balding hairline and high forehead",
+  "side-part": "full hair combed to one side",
+  bald: "no hair / shaved head",
+  mullet: "short on top, long at the back",
+  "blow-wave": "voluminous blow-dried hair",
+  bun: "hair tied up in a bun (pulled back)",
+};
+
+/** Per-field spec: the question label, allowed values, labels/hints, and optional name→hex map. */
 interface FieldSpec {
   key: string;
   label: string;
   values: string[];
+  labels?: string[];
   map?: Record<string, string>;
 }
 
@@ -121,6 +133,7 @@ function fieldSpecs(): FieldSpec[] {
     key: k,
     label: k,
     values: [...PARTS[k]],
+    labels: [...PART_LABELS[k]],
   }));
   specs.push({ key: "skin", label: "skin tone", values: Object.keys(SKIN_BY_NAME), map: SKIN_BY_NAME });
   specs.push({ key: "hairColor", label: "hair and beard colour", values: Object.keys(HAIR_BY_NAME), map: HAIR_BY_NAME });
@@ -170,6 +183,13 @@ export async function configFromImage(
           required: ["value"],
           additionalProperties: false,
         };
+        const optText = spec.values
+          .map((v, i) => {
+            const lbl = spec.labels?.[i];
+            const hint = HINTS[v];
+            return lbl ? `${v} (${lbl}${hint ? " — " + hint : ""})` : v;
+          })
+          .join(", ");
         const out = await session.prompt(
           [
             {
@@ -177,7 +197,7 @@ export async function configFromImage(
               content: [
                 {
                   type: "text",
-                  value: `Look at this person and choose the single best ${spec.label} for a cartoon avatar. Pick the closest match from the options.`,
+                  value: `Look at this person and choose the single best ${spec.label} for a cartoon avatar. Options: ${optText}. Pick the id of the closest match.`,
                 },
                 { type: "image", value: image },
               ],
