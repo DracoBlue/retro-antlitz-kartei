@@ -68,6 +68,46 @@ function systemPrompt(): string {
   ].join("\n");
 }
 
+/** Whether the on-device model accepts image input (multimodal Prompt API). */
+export async function imageSupported(): Promise<boolean> {
+  const LM = getLM();
+  if (!LM) return false;
+  try {
+    const a = await LM.availability({ expectedInputs: [{ type: "image" }] });
+    return a !== "unavailable";
+  } catch {
+    return false;
+  }
+}
+
+/** Describe a person in an image as a one-line avatar prompt (multimodal). */
+export async function describeImage(image: Blob): Promise<string> {
+  const LM = getLM();
+  if (!LM) throw new Error("Prompt API not available in this browser.");
+  const session: any = await LM.create({
+    expectedInputs: [{ type: "image" }],
+    initialPrompts: [{ role: "system", content: "You turn a photo of a person into a short avatar description." }],
+  });
+  try {
+    const out = await session.prompt([
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            value:
+              "In ONE short English sentence, describe this person for a cartoon avatar: hairstyle & hair colour, facial hair, glasses, any hat, the top/clothing, and overall build. No preamble.",
+          },
+          { type: "image", value: image },
+        ],
+      },
+    ]);
+    return String(out).replace(/\s+/g, " ").trim();
+  } finally {
+    session.destroy?.();
+  }
+}
+
 export async function createAiSession(onDownload?: (fraction: number) => void): Promise<unknown> {
   const LM = getLM();
   if (!LM) throw new Error("Prompt API not available in this browser.");

@@ -102,9 +102,10 @@ pnpm --filter @retro-antlitz-kartei/demo dev # local dev server
 "describe your avatar" bar that uses Chrome's on-device
 [Prompt API](https://developer.chrome.com/docs/ai/prompt-api) (Gemini Nano) to
 turn a text description into a config via structured output (a JSON schema built
-from `PARTS`). Chrome-only; enable
-`chrome://flags/#prompt-api-for-gemini-nano` and let the model download. It lives
-in the demo only — the published packages stay dependency-free.
+from `PARTS`). You can also **drop or paste a photo** onto the field — the
+multimodal model describes the person, fills the prompt, and fires it. Chrome-only;
+enable `chrome://flags/#prompt-api-for-gemini-nano` and let the model download.
+It lives in the demo only — the published packages stay dependency-free.
 
 ## Releasing
 
