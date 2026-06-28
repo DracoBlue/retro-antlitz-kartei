@@ -380,18 +380,18 @@ export function drawHair(g: Ctx2D, id: PartId<"hair">, color: string): void {
       P(g, 21, 18, 2, 5, h); // long back
       P(g, 10, 6, 12, 1, hh);
       break;
-    case "blow-wave": // toupee
-      P(g, 9, 4, 14, 4, "#d9a441");
-      P(g, 8, 6, 2, 3, "#d9a441");
-      P(g, 22, 6, 2, 3, "#d9a441");
-      P(g, 9, 4, 14, 1, "#f0c870");
-      P(g, 9, 7, 14, 1, shade("#d9a441", -0.2));
+    case "blow-wave": // voluminous blow-dried hair
+      P(g, 9, 4, 14, 4, h);
+      P(g, 8, 6, 2, 3, h);
+      P(g, 22, 6, 2, 3, h);
+      P(g, 9, 4, 14, 1, hh);
+      P(g, 9, 7, 14, 1, shade(h, -0.2));
       break;
     case "mohawk":
-      P(g, 15, 3, 2, 6, "#e63946");
-      P(g, 14, 4, 1, 4, "#e63946");
-      P(g, 17, 4, 1, 4, "#e63946");
-      P(g, 15, 3, 2, 1, "#ff8a93");
+      P(g, 15, 3, 2, 6, h);
+      P(g, 14, 4, 1, 4, h);
+      P(g, 17, 4, 1, 4, h);
+      P(g, 15, 3, 2, 1, hh);
       break;
     case "bun":
       P(g, 10, 7, 12, 2, h);
@@ -775,9 +775,9 @@ export function drawSide(
   }
   // hair
   if (s.hair !== "bald") {
-    const hc = s.hair === "blow-wave" ? "#d9a441" : s.hair === "mohawk" ? "#e63946" : h;
+    const hc = h; // all styles use the configured hair colour
     if (s.hair === "mohawk") {
-      P(g, 10, 3, 3, 6, "#e63946");
+      P(g, 10, 3, 3, 6, hc);
       P(g, 10, 8, 11, 2, h);
     } else if (s.hair === "receding") {
       P(g, 8, 6, 9, 2, hc); // short top, recedes before the face

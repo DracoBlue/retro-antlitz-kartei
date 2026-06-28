@@ -141,11 +141,11 @@ exports[`sprite snapshots > is stable for a given seed 1`] = `
           ............
           .++-+++++++.
         ...=@-=======...
-        .OO=@========OO.
-       ..oo=@========oo..
+        .@@=@========@@.
+       ..@@=@========@@..
        .----------------.
-       .o**************o.
-       .oo############oo.
+       .@OOOOOOOOOOOOOO@.
+       .@@############@@.
        ...@@#########O...
        ..############O#..
        .#############O##.
@@ -185,12 +185,12 @@ exports[`sprite snapshots > renders a fully decorated figure 1`] = `
 
          ..............
          .O.+O..+..O*O.
-         ......oo......
+         ......==......
          .@@@@@@@@@@@@.
          .OOOOOOOOOOOO.
          .OOOOOOOOOOOO.
-         .....++++.....
-         .OOOOO++OOOOO.
+         .....::::.....
+         .OOOOO::OOOOO.
         ..OOOOOOOOOOO*..
        ..OOOOOOOOOOOO*O..
        .OOOOOOOOOOOOO*OO.
