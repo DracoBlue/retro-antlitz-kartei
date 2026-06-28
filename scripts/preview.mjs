@@ -37,7 +37,7 @@ seeds.forEach((seed, i) => {
 save("seed-grid", sheet);
 
 // One avatar in all three views
-const cfg = normalizeConfig({ hut: 1, haare: 2, ohren: 1, nase: 1, mund: 3, torso: 0, hose: 1, skin: 2, cloth: 2, bg: 4, gender: 2, acc: 5 });
+const cfg = normalizeConfig({ hat: "top-hat", hair: "tousled", ears: "sail-ears", nose: "aquiline", mouth: "grin", top: "suit", trousers: "jeans", skin: "#e0ac69", clothing: "#3a86ff", background: "#8338ec", build: "large", accessory: "full-beard" });
 const views = ["left", "front", "right"];
 const vSheet = new Canvas(views.length * 200, 250);
 const vctx = vSheet.getContext("2d");

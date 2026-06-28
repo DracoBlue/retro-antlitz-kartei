@@ -9,6 +9,8 @@ and scaled with crisp nearest-neighbour pixels.
 > Satire Edition: top hats, crowns, halos, hi-vis vests, lederhosen, monocles
 > and a neon combat arena.
 
+**▶ [Live editor demo](https://dracoblue.github.io/retro-antlitz-kartei/)** — deployed from `main` on every push.
+
 ![Seeded avatars](assets/seeds.png)
 
 <sub>Deterministic from a seed — `configFromSeed("Ada")`, `configFromSeed("Bjarne")`, …</sub>
@@ -58,19 +60,20 @@ export default () => <AvatarEditor seed="Ada" onChange={(cfg) => console.log(cfg
 
 ## Config & share codes
 
-A config is a plain object of part choices and colours. Codes are base64 of a
-**readable, string-valued** JSON form, so they stay valid even if catalogs are
-reordered:
+A config is a plain object of **string** part ids and **hex** colours — no
+magic numbers. Adding or reordering a part option never breaks saved avatars,
+share codes, or the drawing code (parts are dispatched by id, not index):
 
 ```json
-{ "hut": "top-hat", "haare": "side-part", "nase": "button", "mund": "smile",
-  "torso": "suit", "hose": "suit-trousers", "skin": "#e0ac69",
-  "cloth": "#3a86ff", "bg": "#3a86ff", "gender": "medium", "acc": "none",
-  "view": "front" }
+{ "hat": "top-hat", "hair": "side-part", "ears": "normal", "nose": "button",
+  "mouth": "smile", "top": "suit", "trousers": "suit-trousers",
+  "build": "medium", "accessory": "none", "skin": "#e0ac69",
+  "clothing": "#3a86ff", "background": "#3a86ff", "view": "front" }
 ```
 
-`encodeConfig(config)` → code · `decodeConfig(code)` → config (invalid codes
-fall back to the default avatar, never throw).
+Codes are base64 of exactly this object. `encodeConfig` / `decodeConfig`
+round-trip it; invalid codes fall back to the default avatar instead of
+throwing.
 
 ## Development
 
@@ -82,6 +85,17 @@ pnpm build       # build every package
 pnpm test        # run unit tests
 pnpm typecheck   # type-check every package
 node scripts/preview.mjs   # render sample PNGs to /tmp/rak-out (needs @napi-rs/canvas)
+```
+
+### Demo app
+
+The editor demo under [`demo/`](demo) is a Vite app deployed to GitHub Pages by
+the **Deploy demo to Pages** workflow on every push to `main` (enable
+*Settings → Pages → Source: GitHub Actions* once).
+
+```bash
+pnpm build                                   # packages must be built first
+pnpm --filter @retro-antlitz-kartei/demo dev # local dev server
 ```
 
 ## Releasing

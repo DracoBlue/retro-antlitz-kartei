@@ -1,15 +1,15 @@
 import type { AvatarConfig, Ctx2D, SpriteCanvas, View } from "./types.js";
 import { createCanvas } from "./canvas.js";
 import { shade } from "./color.js";
-import { SKIN, CLOTH, HAIR } from "./palettes.js";
+import { HAIR } from "./palettes.js";
 import {
   COLS,
   ROWS,
   P,
   px,
   clr,
-  drawPants,
-  drawTorso,
+  drawTrousers,
+  drawTop,
   drawHead,
   drawEars,
   drawNose,
@@ -19,7 +19,12 @@ import {
   drawGlasses,
   drawHat,
   drawSide,
+  type GlassesId,
+  type BeardId,
 } from "./parts.js";
+
+const GLASSES: readonly string[] = ["nerd-glasses", "round-glasses", "sunglasses", "monocle"];
+const BEARDS: readonly string[] = ["full-beard", "moustache", "goatee"];
 
 /**
  * Compose the avatar described by `config` into a transparent, outlined
@@ -34,15 +39,28 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
   const { canvas, ctx: g } = createCanvas(COLS, ROWS);
   g.imageSmoothingEnabled = false;
 
-  const skin = SKIN[config.skin] ?? SKIN[0];
-  const cloth = CLOTH[config.cloth] ?? CLOTH[0];
-  const gx: "m" | "w" | "n" = config.gender === 0 ? "w" : config.gender === 2 ? "m" : "n";
+  const { skin, clothing, accessory } = config;
+  const gx: "m" | "w" | "n" = config.build === "small" ? "w" : config.build === "large" ? "m" : "n";
 
   if (view === "left" || view === "right") {
-    drawSide(g, config, skin, cloth, gx);
+    drawSide(
+      g,
+      {
+        hat: config.hat,
+        hair: config.hair,
+        nose: config.nose,
+        mouth: config.mouth,
+        accessory: config.accessory,
+        top: config.top,
+        trousers: config.trousers,
+      },
+      skin,
+      clothing,
+      gx,
+    );
   } else {
-    drawPants(g, config.hose, skin);
-    drawTorso(g, config.torso, cloth, skin);
+    drawTrousers(g, config.trousers, skin);
+    drawTop(g, config.top, clothing, skin);
     if (gx === "w") {
       clr(g, 8, 24);
       clr(g, 23, 24);
@@ -58,7 +76,7 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
       P(g, 22, 21, 1, 1, skin);
       P(g, 10, 21, 12, 1, shade(skin, -0.22));
     }
-    drawEars(g, config.ohren, skin);
+    drawEars(g, config.ears, skin);
     // eyes
     P(g, 11, 12, 2, 1, HAIR);
     P(g, 18, 12, 2, 1, HAIR);
@@ -72,12 +90,12 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
       px(g, 20, 13, HAIR);
       px(g, 20, 12, HAIR);
     }
-    drawNose(g, config.nase, skin);
-    if (config.acc >= 5) drawBeard(g, config.acc - 5);
-    drawMouth(g, config.mund);
-    drawHair(g, config.haare);
-    if (config.acc >= 1 && config.acc <= 4) drawGlasses(g, config.acc - 1);
-    drawHat(g, config.hut, cloth);
+    drawNose(g, config.nose, skin);
+    if (BEARDS.includes(accessory)) drawBeard(g, accessory as BeardId);
+    drawMouth(g, config.mouth);
+    drawHair(g, config.hair);
+    if (GLASSES.includes(accessory)) drawGlasses(g, accessory as GlassesId);
+    drawHat(g, config.hat, clothing);
   }
 
   outline(g);

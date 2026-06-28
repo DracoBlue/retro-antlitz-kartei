@@ -1,68 +1,61 @@
-import type { AvatarConfig, PartKey, View } from "./types.js";
-import { PART_IDS, SKIN, CLOTH, BG } from "./palettes.js";
+import type { AvatarConfig, View } from "./types.js";
+import { PARTS, SKIN, CLOTH, BG, type PartId, type PartKey } from "./palettes.js";
 import { createRng, type Rng } from "./rng.js";
 
 /** The avatar shown before the user changes anything — a plain everyman. */
 export const DEFAULT_CONFIG: Readonly<AvatarConfig> = Object.freeze({
-  hut: 1,
-  haare: 1,
-  ohren: 0,
-  nase: 0,
-  mund: 0,
-  torso: 0,
-  hose: 0,
-  skin: 2,
-  cloth: 2,
-  bg: 1,
-  gender: 1,
-  acc: 0,
+  hat: "top-hat",
+  hair: "side-part",
+  ears: "normal",
+  nose: "button",
+  mouth: "smile",
+  top: "suit",
+  trousers: "suit-trousers",
+  build: "medium",
+  accessory: "none",
+  skin: SKIN[2], // #e0ac69
+  clothing: CLOTH[2], // #3a86ff
+  background: BG[1], // #3a86ff
   view: "front",
 });
 
 const VIEWS: readonly View[] = ["front", "left", "right"];
-const PART_KEYS: readonly PartKey[] = ["hut", "haare", "ohren", "nase", "mund", "torso", "hose", "gender", "acc"];
-const COLOR_KEYS = { skin: SKIN, cloth: CLOTH, bg: BG } as const;
+const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 
-function clampInt(v: unknown, n: number, fallback: number): number {
-  return Number.isInteger(v) && (v as number) >= 0 && (v as number) < n ? (v as number) : fallback;
+function normPart<K extends PartKey>(key: K, value: unknown): PartId<K> {
+  return (PARTS[key] as readonly string[]).includes(value as string)
+    ? (value as PartId<K>)
+    : (DEFAULT_CONFIG[key] as PartId<K>);
+}
+
+function normColor(value: unknown, fallback: string): string {
+  return typeof value === "string" && HEX_RE.test(value) ? value.toLowerCase() : fallback;
 }
 
 /**
- * Coerce a loose / partial object into a valid {@link AvatarConfig}. Missing
- * keys take their {@link DEFAULT_CONFIG} value; out-of-range indices are
- * clamped to the default. Never throws.
+ * Coerce a loose / partial object into a valid {@link AvatarConfig}. Unknown
+ * part ids fall back to the {@link DEFAULT_CONFIG} value; non-hex colours fall
+ * back to the default colour; missing keys take their default. Never throws.
  */
 export function normalizeConfig(input: Partial<AvatarConfig> = {}): AvatarConfig {
-  const out = { ...DEFAULT_CONFIG } as AvatarConfig;
-  for (const key of PART_KEYS) {
-    out[key] = clampInt(input[key], PART_IDS[key].length, DEFAULT_CONFIG[key]);
-  }
-  for (const key of Object.keys(COLOR_KEYS) as Array<keyof typeof COLOR_KEYS>) {
-    out[key] = clampInt(input[key], COLOR_KEYS[key].length, DEFAULT_CONFIG[key]);
-  }
-  out.view = (typeof input.view === "string" && VIEWS.includes(input.view) ? input.view : DEFAULT_CONFIG.view) as View;
-  return out;
+  return {
+    hat: normPart("hat", input.hat),
+    hair: normPart("hair", input.hair),
+    ears: normPart("ears", input.ears),
+    nose: normPart("nose", input.nose),
+    mouth: normPart("mouth", input.mouth),
+    top: normPart("top", input.top),
+    trousers: normPart("trousers", input.trousers),
+    build: normPart("build", input.build),
+    accessory: normPart("accessory", input.accessory),
+    skin: normColor(input.skin, DEFAULT_CONFIG.skin),
+    clothing: normColor(input.clothing, DEFAULT_CONFIG.clothing),
+    background: normColor(input.background, DEFAULT_CONFIG.background),
+    view: typeof input.view === "string" && VIEWS.includes(input.view) ? input.view : DEFAULT_CONFIG.view,
+  };
 }
 
-/* ---------- serialization ---------- */
-
-/** Resolve a serialized part value (string id or raw index) to a valid index. */
-function resolvePart(key: PartKey, value: unknown, fallback: number): number {
-  if (typeof value === "string") {
-    const i = PART_IDS[key].indexOf(value);
-    return i >= 0 ? i : fallback;
-  }
-  return clampInt(value, PART_IDS[key].length, fallback);
-}
-
-/** Resolve a serialized colour value (hex string or raw index) to a valid index. */
-function resolveColor(palette: readonly string[], value: unknown, fallback: number): number {
-  if (typeof value === "string") {
-    const i = palette.indexOf(value.toLowerCase());
-    return i >= 0 ? i : fallback;
-  }
-  return clampInt(value, palette.length, fallback);
-}
+/* ---------- share codes ---------- */
 
 function toBase64(s: string): string {
   if (typeof Buffer !== "undefined") return Buffer.from(s, "utf-8").toString("base64");
@@ -79,71 +72,11 @@ function fromBase64(b: string): string {
 }
 
 /**
- * The plain object embedded in a config code: every part as its stable string
- * id and every colour as its hex value. Human-readable and order-independent.
- */
-export interface SerializedConfig {
-  hut: string;
-  haare: string;
-  ohren: string;
-  nase: string;
-  mund: string;
-  torso: string;
-  hose: string;
-  skin: string;
-  cloth: string;
-  bg: string;
-  gender: string;
-  acc: string;
-  view: View;
-}
-
-/** Convert a config to its readable, string-valued serialized form. */
-export function toSerializable(config: AvatarConfig): SerializedConfig {
-  const c = normalizeConfig(config);
-  return {
-    hut: PART_IDS.hut[c.hut],
-    haare: PART_IDS.haare[c.haare],
-    ohren: PART_IDS.ohren[c.ohren],
-    nase: PART_IDS.nase[c.nase],
-    mund: PART_IDS.mund[c.mund],
-    torso: PART_IDS.torso[c.torso],
-    hose: PART_IDS.hose[c.hose],
-    skin: SKIN[c.skin],
-    cloth: CLOTH[c.cloth],
-    bg: BG[c.bg],
-    gender: PART_IDS.gender[c.gender],
-    acc: PART_IDS.acc[c.acc],
-    view: c.view,
-  };
-}
-
-/** Restore a config from its serialized form, clamping anything unknown. */
-export function fromSerializable(data: Partial<SerializedConfig>, fallback: AvatarConfig = DEFAULT_CONFIG as AvatarConfig): AvatarConfig {
-  const fb = normalizeConfig(fallback);
-  return {
-    hut: resolvePart("hut", data.hut, fb.hut),
-    haare: resolvePart("haare", data.haare, fb.haare),
-    ohren: resolvePart("ohren", data.ohren, fb.ohren),
-    nase: resolvePart("nase", data.nase, fb.nase),
-    mund: resolvePart("mund", data.mund, fb.mund),
-    torso: resolvePart("torso", data.torso, fb.torso),
-    hose: resolvePart("hose", data.hose, fb.hose),
-    skin: resolveColor(SKIN, data.skin, fb.skin),
-    cloth: resolveColor(CLOTH, data.cloth, fb.cloth),
-    bg: resolveColor(BG, data.bg, fb.bg),
-    gender: resolvePart("gender", data.gender, fb.gender),
-    acc: resolvePart("acc", data.acc, fb.acc),
-    view: typeof data.view === "string" && VIEWS.includes(data.view) ? data.view : fb.view,
-  };
-}
-
-/**
- * Encode a config into a compact, shareable code: base64 of the readable
- * {@link SerializedConfig} JSON. Round-trips through {@link decodeConfig}.
+ * Encode a config into a compact, shareable code: base64 of the (already
+ * readable, string-valued) config JSON. Round-trips through {@link decodeConfig}.
  */
 export function encodeConfig(config: AvatarConfig): string {
-  return toBase64(JSON.stringify(toSerializable(config)));
+  return toBase64(JSON.stringify(normalizeConfig(config)));
 }
 
 /**
@@ -152,9 +85,9 @@ export function encodeConfig(config: AvatarConfig): string {
  */
 export function decodeConfig(code: string, fallback: AvatarConfig = DEFAULT_CONFIG as AvatarConfig): AvatarConfig {
   try {
-    const data = JSON.parse(fromBase64(code.trim())) as Partial<SerializedConfig>;
+    const data = JSON.parse(fromBase64(code.trim())) as Partial<AvatarConfig>;
     if (!data || typeof data !== "object") return normalizeConfig(fallback);
-    return fromSerializable(data, fallback);
+    return normalizeConfig({ ...normalizeConfig(fallback), ...data });
   } catch {
     return normalizeConfig(fallback);
   }
@@ -162,23 +95,25 @@ export function decodeConfig(code: string, fallback: AvatarConfig = DEFAULT_CONF
 
 /* ---------- generation ---------- */
 
-const pick = (rng: Rng, n: number) => Math.floor(rng() * n);
+const pickId = <K extends PartKey>(rng: Rng, key: K): PartId<K> =>
+  PARTS[key][Math.floor(rng() * PARTS[key].length)] as PartId<K>;
+const pickColor = (rng: Rng, palette: readonly string[]): string => palette[Math.floor(rng() * palette.length)];
 
 /** Build a fresh config by drawing every part from `rng`. View stays "front". */
 function buildConfig(rng: Rng): AvatarConfig {
   return {
-    hut: pick(rng, PART_IDS.hut.length),
-    haare: pick(rng, PART_IDS.haare.length),
-    ohren: pick(rng, PART_IDS.ohren.length),
-    nase: pick(rng, PART_IDS.nase.length),
-    mund: pick(rng, PART_IDS.mund.length),
-    torso: pick(rng, PART_IDS.torso.length),
-    hose: pick(rng, PART_IDS.hose.length),
-    skin: pick(rng, SKIN.length),
-    cloth: pick(rng, CLOTH.length),
-    bg: pick(rng, BG.length),
-    gender: pick(rng, PART_IDS.gender.length),
-    acc: pick(rng, PART_IDS.acc.length),
+    hat: pickId(rng, "hat"),
+    hair: pickId(rng, "hair"),
+    ears: pickId(rng, "ears"),
+    nose: pickId(rng, "nose"),
+    mouth: pickId(rng, "mouth"),
+    top: pickId(rng, "top"),
+    trousers: pickId(rng, "trousers"),
+    skin: pickColor(rng, SKIN),
+    clothing: pickColor(rng, CLOTH),
+    background: pickColor(rng, BG),
+    build: pickId(rng, "build"),
+    accessory: pickId(rng, "accessory"),
     view: "front",
   };
 }

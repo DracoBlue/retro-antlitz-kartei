@@ -1,6 +1,5 @@
 import type { AvatarConfig, Ctx2D, SpriteCanvas } from "./types.js";
 import { shade } from "./color.js";
-import { BG } from "./palettes.js";
 import { COLS, ROWS } from "./parts.js";
 import { composeSprite } from "./compose.js";
 
@@ -52,7 +51,7 @@ export function renderAvatar(canvas: RenderTarget, config: AvatarConfig, opts: R
 
   const { background = true, floor = true, sprite } = opts;
   if (background !== false) {
-    const bg = typeof background === "string" ? background : (BG[config.bg] ?? BG[0]);
+    const bg = typeof background === "string" ? background : config.background;
     drawBackground(ctx, w, h, bg, floor);
   }
 

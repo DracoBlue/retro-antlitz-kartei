@@ -46,15 +46,15 @@ describe("sprite snapshots", () => {
 
   it("renders a fully decorated figure", () => {
     const fancy = normalizeConfig({
-      hut: 2, // crown
-      haare: 5, // mohawk
-      ohren: 6, // elf
-      nase: 7, // clown
-      mund: 3, // grin
-      torso: 6, // hi-vis vest
-      hose: 3, // shorts
-      acc: 5, // full beard
-      gender: 2, // large
+      hat: "crown",
+      hair: "mohawk",
+      ears: "elf",
+      nose: "clown",
+      mouth: "grin",
+      top: "hi-vis-vest",
+      trousers: "shorts",
+      accessory: "full-beard",
+      build: "large",
     });
     expect(spriteToAscii(fancy, "front")).toMatchSnapshot();
   });

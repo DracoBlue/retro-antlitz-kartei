@@ -25,7 +25,7 @@ import {
 renderAvatar(canvas, configFromSeed("Ada Lovelace"));
 
 // Hand-built (missing keys filled, out-of-range clamped, never throws).
-const cfg = normalizeConfig({ hut: 2, torso: 7, skin: 4, view: "left" });
+const cfg = normalizeConfig({ hat: "crown", top: "leather-jacket", skin: "#8d5524", view: "left" });
 renderAvatar(canvas, cfg);
 
 // A raw, transparent, outlined sprite to draw yourself.
@@ -45,34 +45,48 @@ const back = decodeConfig(code); // invalid -> default avatar
 - `normalizeConfig(partial)` / `DEFAULT_CONFIG` — coerce/clamp loose input.
 - `randomConfig(rng?)` — random avatar; pass an `Rng` for reproducibility.
 - `configFromSeed(seed)` — deterministic avatar from a string.
-- `encodeConfig` / `decodeConfig` / `toSerializable` / `fromSerializable` —
-  share codes (readable string-valued JSON, base64).
+- `encodeConfig` / `decodeConfig` — share codes (base64 of the config JSON).
 - `createRng(seed)` — the seeded PRNG used internally.
-- Catalogs & palettes: `PART_NAMES`, `PART_IDS`, `SKIN`, `CLOTH`, `BG`, `PANTS`,
-  `HAIR`, `COLS`, `ROWS`, plus the `shade` colour helper and `createCanvas`.
+- Catalogs & palettes: `PARTS` (id arrays), `PART_LABELS`, `partIndex`,
+  `partLabel`, `SKIN`, `CLOTH`, `BG`, `PANTS`, `HAIR`, `COLS`, `ROWS`, plus the
+  `shade` colour helper and `createCanvas`.
 
 ## Config shape
 
+Parts are **string ids** (typed unions, so you get autocomplete); colours are
+**hex strings** and may be any `#rrggbb`, not just the editor palette:
+
 ```ts
 interface AvatarConfig {
-  hut: number;    // hat        0–7
-  haare: number;  // hair       0–7
-  ohren: number;  // ears       0–7
-  nase: number;   // nose       0–7
-  mund: number;   // mouth      0–7
-  torso: number;  // top        0–7
-  hose: number;   // trousers   0–7
-  skin: number;   // index into SKIN
-  cloth: number;  // index into CLOTH
-  bg: number;     // index into BG
-  gender: number; // build      0–2
-  acc: number;    // accessory  0–7 (glasses / beards)
+  hat: "none" | "top-hat" | "crown" | …;
+  hair: "bald" | "side-part" | "tousled" | …;
+  ears: "normal" | "sail-ears" | …;
+  nose: "button" | "aquiline" | …;
+  mouth: "smile" | "grimace" | …;
+  top: "suit" | "shirt" | …;
+  trousers: "suit-trousers" | "jeans" | …;
+  build: "small" | "medium" | "large";
+  accessory: "none" | "nerd-glasses" | "full-beard" | …;
+  skin: string;       // hex, e.g. "#e0ac69"
+  clothing: string;   // hex
+  background: string; // hex
   view: "front" | "left" | "right";
 }
 ```
 
-Use `PART_NAMES[key][value]` for a display label and `PART_IDS[key][value]` for
-a stable id.
+The full id lists live in `PARTS`; `PART_LABELS[key][i]` and `partLabel(key, id)`
+give display labels.
+
+## Extending — adding a part
+
+No numbers to keep in sync. To add, say, a new hat:
+
+1. Append the id to `PARTS.hat` and a label to `PART_LABELS.hat` (any position).
+2. Add a matching `case "your-hat":` to `drawHat` (and the side-view branch if
+   it should show in profile).
+
+Existing configs, share codes and snapshots stay valid — parts are dispatched
+by **id**, never by array position.
 
 ## Environments
 

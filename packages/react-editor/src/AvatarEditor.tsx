@@ -3,7 +3,8 @@ import {
   type AvatarConfig,
   type PartKey,
   type View,
-  PART_NAMES,
+  PARTS,
+  partLabel,
   SKIN,
   CLOTH,
   BG,
@@ -47,14 +48,14 @@ export interface AvatarEditorProps {
 }
 
 const PART_CONTROLS: readonly { key: PartKey; label: string }[] = [
-  { key: "gender", label: "BUILD" },
-  { key: "hut", label: "HAT" },
-  { key: "haare", label: "HAIR" },
-  { key: "ohren", label: "EARS" },
-  { key: "nase", label: "NOSE" },
-  { key: "acc", label: "ACCESSORY" },
-  { key: "torso", label: "TOP" },
-  { key: "hose", label: "TROUSERS" },
+  { key: "build", label: "BUILD" },
+  { key: "hat", label: "HAT" },
+  { key: "hair", label: "HAIR" },
+  { key: "ears", label: "EARS" },
+  { key: "nose", label: "NOSE" },
+  { key: "accessory", label: "ACCESSORY" },
+  { key: "top", label: "TOP" },
+  { key: "trousers", label: "TROUSERS" },
 ];
 
 const VIEW_OPTIONS: readonly { key: View; name: string }[] = [
@@ -139,8 +140,9 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
   const patch = useCallback((p: Partial<AvatarConfig>) => setConfig({ ...config, ...p }), [config, setConfig]);
   const cycle = useCallback(
     (key: PartKey, dir: number) => {
-      const len = PART_NAMES[key].length;
-      patch({ [key]: (config[key] + dir + len) % len } as Partial<AvatarConfig>);
+      const ids = PARTS[key];
+      const cur = ids.indexOf(config[key] as never);
+      patch({ [key]: ids[(cur + dir + ids.length) % ids.length] } as Partial<AvatarConfig>);
     },
     [config, patch],
   );
@@ -235,7 +237,7 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
     boxShadow: active ? "0 0 0 2px " + t.accent + "66" : "none",
   });
 
-  const nameDisplay = PART_NAMES.torso[config.torso].toUpperCase();
+  const nameDisplay = partLabel("top", config.top).toUpperCase();
 
   const partRow = (key: PartKey, label: string) => (
     <div key={key} style={rowStyle}>
@@ -244,7 +246,7 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
       </button>
       <div style={{ flex: 1, minWidth: 0, textAlign: "center" }}>
         <div style={partLabelStyle}>{label}</div>
-        <div style={partValueStyle}>{PART_NAMES[key][config[key]]}</div>
+        <div style={partValueStyle}>{partLabel(key, config[key])}</div>
       </div>
       <button onClick={() => cycle(key, 1)} style={arrowStyle}>
         &#9654;
@@ -434,13 +436,13 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
                 ))}
               </div>
 
-              {partRow("mund", "MOUTH")}
+              {partRow("mouth", "MOUTH")}
 
               <div style={swatchRowStyle}>
                 <span style={swatchLabelStyle}>BACKGROUND</span>
                 <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                  {BG.map((c, i) => (
-                    <button key={c} onClick={() => patch({ bg: i })} style={swatchBtn(c, config.bg === i)} />
+                  {BG.map((c) => (
+                    <button key={c} onClick={() => patch({ background: c })} style={swatchBtn(c, config.background === c)} />
                   ))}
                 </div>
               </div>
@@ -522,8 +524,8 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
             <div style={swatchRowStyle}>
               <span style={swatchLabelStyle}>SKIN</span>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                {SKIN.map((c, i) => (
-                  <button key={c} onClick={() => patch({ skin: i })} style={swatchBtn(c, config.skin === i)} />
+                {SKIN.map((c) => (
+                  <button key={c} onClick={() => patch({ skin: c })} style={swatchBtn(c, config.skin === c)} />
                 ))}
               </div>
             </div>
@@ -531,8 +533,8 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
             <div style={swatchRowStyle}>
               <span style={swatchLabelStyle}>CLOTHING</span>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                {CLOTH.map((c, i) => (
-                  <button key={c} onClick={() => patch({ cloth: i })} style={swatchBtn(c, config.cloth === i)} />
+                {CLOTH.map((c) => (
+                  <button key={c} onClick={() => patch({ clothing: c })} style={swatchBtn(c, config.clothing === c)} />
                 ))}
               </div>
             </div>

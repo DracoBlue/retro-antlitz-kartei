@@ -37,7 +37,7 @@ const save = (name, canvas) => writeFileSync(join(outDir, name), canvas.toBuffer
 
 // 2) Three views of one avatar.
 {
-  const cfg = normalizeConfig({ hut: 1, haare: 2, ohren: 1, nase: 1, mund: 3, torso: 0, hose: 1, skin: 2, cloth: 2, bg: 4, gender: 2, acc: 5 });
+  const cfg = normalizeConfig({ hat: "top-hat", hair: "tousled", ears: "sail-ears", nose: "aquiline", mouth: "grin", top: "suit", trousers: "jeans", skin: "#e0ac69", clothing: "#3a86ff", background: "#8338ec", build: "large", accessory: "full-beard" });
   const cell = 200;
   const sheet = new Canvas(3 * cell, cell + 20);
   const ctx = sheet.getContext("2d");
@@ -51,7 +51,7 @@ const save = (name, canvas) => writeFileSync(join(outDir, name), canvas.toBuffer
 
 // 3) Combat poses — natural 360x380 arena, tiled 3x2 with labels.
 {
-  const cfg = normalizeConfig({ hut: 0, haare: 5, nase: 0, mund: 6, torso: 7, hose: 4, skin: 3, cloth: 4, bg: 4, gender: 2, acc: 6 });
+  const cfg = normalizeConfig({ hat: "none", hair: "mohawk", nose: "button", mouth: "snarl", top: "leather-jacket", trousers: "bell-bottoms", skin: "#c68642", clothing: "#9b5de5", background: "#8338ec", build: "large", accessory: "moustache" });
   const sprite = composeSprite({ ...cfg, view: "right" }, "right");
   const cw = 300;
   const ch = 320;

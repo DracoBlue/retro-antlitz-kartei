@@ -18,7 +18,7 @@ import { AvatarEditor } from "@retro-antlitz-kartei/react-editor";
 <AvatarEditor seed="Ada" onChange={(cfg) => save(cfg)} />;
 
 // Controlled
-const [cfg, setCfg] = useState(() => normalizeConfig({ hut: 2 }));
+const [cfg, setCfg] = useState(() => normalizeConfig({ hat: "crown" }));
 <AvatarEditor value={cfg} onChange={setCfg} defaultLayout="kompakt" />;
 ```
 
