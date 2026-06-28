@@ -1,0 +1,40 @@
+{
+  "name": "retro-antlitz-kartei",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Retro pixel-art avatar generator, animator and editor — a monorepo of MIT-licensed packages.",
+  "license": "MIT",
+  "author": "DracoBlue",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DracoBlue/retro-antlitz-kartei.git"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/*\" run build",
+    "dev": "pnpm -r --parallel --filter \"./packages/*\" run dev",
+    "test": "pnpm -r --filter \"./packages/*\" run test",
+    "typecheck": "pnpm -r --filter \"./packages/*\" run typecheck",
+    "clean": "pnpm -r --filter \"./packages/*\" exec rm -rf dist",
+    "images": "node scripts/gen-readme-images.mjs",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "@napi-rs/canvas": "^1.0.1",
+    "@types/node": "^26.0.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=18"
+  }
+}

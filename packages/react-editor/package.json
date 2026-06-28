@@ -1,0 +1,55 @@
+{
+  "name": "@retro-antlitz-kartei/react-editor",
+  "version": "0.1.0",
+  "description": "React editor and preview components for retro-antlitz-kartei pixel-art avatars.",
+  "license": "MIT",
+  "author": "DracoBlue",
+  "homepage": "https://github.com/DracoBlue/retro-antlitz-kartei/tree/main/packages/react-editor#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DracoBlue/retro-antlitz-kartei.git",
+    "directory": "packages/react-editor"
+  },
+  "keywords": [
+    "avatar",
+    "pixel-art",
+    "editor",
+    "react",
+    "canvas",
+    "retro"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@retro-antlitz-kartei/animate": "workspace:^",
+    "@retro-antlitz-kartei/generator": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

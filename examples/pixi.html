@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>retro-antlitz-kartei · PixiJS combat demo</title>
+  <style>
+    html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,sans-serif}
+    #hint{position:fixed;left:12px;top:12px;color:#fff;opacity:.7;font-size:13px;z-index:10}
+  </style>
+</head>
+<body>
+  <div id="hint">Click / tap or press Space to "hit" the avatar.</div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "pixi.js": "https://esm.sh/pixi.js@8",
+      "@retro-antlitz-kartei/generator": "../packages/generator/dist/index.js",
+      "@retro-antlitz-kartei/animate": "../packages/animate/dist/index.js"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as PIXI from "pixi.js";
+    import { composeSprite, configFromSeed } from "@retro-antlitz-kartei/generator";
+    import { getPoseTransform } from "@retro-antlitz-kartei/animate";
+
+    // ---- the helper you can copy into your project ---------------------------
+    // Turns a config into a crisp, transparent PixiJS texture. No async, no SVG.
+    function textureFromConfig(config, view = "right") {
+      const canvas = composeSprite(config, view); // 32x40 transparent + outline
+      const tex = PIXI.Texture.from(canvas);
+      tex.source.scaleMode = "nearest"; // Pixi v8. v7: Texture.from(canvas,{scaleMode:PIXI.SCALE_MODES.NEAREST})
+      return tex;
+    }
+    // -------------------------------------------------------------------------
+
+    const SCALE = 5;            // sprite zoom
+    const POSE_K = SCALE / 7;   // pose offsets are tuned for ~7x; rescale them
+
+    const app = new PIXI.Application();
+    await app.init({ resizeTo: window, background: "#241141", antialias: false });
+    document.body.appendChild(app.canvas);
+
+    // stand-in for your combat background image
+    const ground = new PIXI.Graphics()
+      .rect(0, app.screen.height * 0.78, app.screen.width, app.screen.height)
+      .fill("#160a26");
+    app.stage.addChild(ground);
+
+    // world position (your left->right movement) lives on the container,
+    // the pose recoil lives on the sprite — so they don't fight each other.
+    const avatar = new PIXI.Container();
+    const sprite = new PIXI.Sprite(textureFromConfig(configFromSeed("Ada Lovelace"), "right"));
+    sprite.anchor.set(0.5, 1); // feet, so rotation pivots naturally
+    sprite.scale.set(SCALE);
+    avatar.addChild(sprite);
+    avatar.y = app.screen.height * 0.78 + 6;
+    avatar.x = -60;
+    app.stage.addChild(avatar);
+
+    const flash = new PIXI.Graphics().rect(0, 0, app.screen.width, app.screen.height).fill("#ff3232");
+    flash.alpha = 0;
+    app.stage.addChild(flash);
+
+    let elapsed = 0;
+    let hitAt = null;
+
+    function hit() {
+      hitAt = elapsed;
+      // ... play your own "hit" sound here ...
+      console.log("hit!");
+    }
+    app.stage.eventMode = "static";
+    app.stage.hitArea = app.screen;
+    app.stage.on("pointerdown", hit);
+    window.addEventListener("keydown", (e) => { if (e.code === "Space") { e.preventDefault(); hit(); } });
+
+    app.ticker.add((ticker) => {
+      const dt = ticker.deltaMS / 1000;
+      elapsed += dt;
+
+      // your existing movement: glide left -> right, wrap around
+      avatar.x += dt * 90;
+      if (avatar.x > app.screen.width + 60) avatar.x = -60;
+
+      // combat juice on top, only while a hit is playing (~0.5s)
+      let tr = { dx: 0, dy: 0, rot: 0, sx: 1, sy: 1, flash: false };
+      if (hitAt !== null) {
+        const tt = elapsed - hitAt;
+        if (tt > 0.5) { hitAt = null; }
+        else tr = getPoseTransform("hurt", tt);
+      }
+      sprite.x = tr.dx * POSE_K;
+      sprite.y = tr.dy * POSE_K;
+      sprite.rotation = tr.rot;
+      sprite.scale.set(SCALE * tr.sx, SCALE * tr.sy);
+      flash.alpha = tr.flash ? 0.4 : 0;
+    });
+  </script>
+</body>
+</html>
