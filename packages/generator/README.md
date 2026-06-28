@@ -67,6 +67,7 @@ interface AvatarConfig {
   trousers: "suit-trousers" | "jeans" | …;
   build: "small" | "medium" | "large";
   accessory: "none" | "nerd-glasses" | "full-beard" | …;
+  shoes: "sneakers" | "boots" | "dress-shoes" | "clown-shoes" | …;
   skin: string;       // hex, e.g. "#e0ac69"
   clothing: string;   // hex
   background: string; // hex

@@ -56,6 +56,7 @@ const PART_CONTROLS: readonly { key: PartKey; label: string }[] = [
   { key: "accessory", label: "ACCESSORY" },
   { key: "top", label: "TOP" },
   { key: "trousers", label: "TROUSERS" },
+  { key: "shoes", label: "SHOES" },
 ];
 
 const VIEW_OPTIONS: readonly { key: View; name: string }[] = [

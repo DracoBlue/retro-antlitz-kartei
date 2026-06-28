@@ -29,6 +29,8 @@ export interface AvatarConfig {
   build: PartId<"build">;
   /** Accessory — glasses or beard. */
   accessory: PartId<"accessory">;
+  /** Footwear. */
+  shoes: PartId<"shoes">;
   /** Skin tone, any `#rrggbb` hex. */
   skin: string;
   /** Clothing colour, any `#rrggbb` hex. */

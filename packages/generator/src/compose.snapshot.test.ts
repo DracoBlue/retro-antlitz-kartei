@@ -62,4 +62,11 @@ describe("sprite snapshots", () => {
   it("is stable for a given seed", () => {
     expect(spriteToAscii(configFromSeed("Ada Lovelace"), "front")).toMatchSnapshot();
   });
+
+  it("draws shoes in front and profile", () => {
+    const booted = normalizeConfig({ trousers: "jeans", shoes: "boots" });
+    expect(spriteToAscii(booted, "front")).toMatchSnapshot();
+    expect(spriteToAscii(booted, "right")).toMatchSnapshot();
+    expect(spriteToAscii(normalizeConfig({ shoes: "clown-shoes" }), "front")).toMatchSnapshot();
+  });
 });

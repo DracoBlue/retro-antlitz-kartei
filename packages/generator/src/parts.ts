@@ -12,6 +12,7 @@ export interface SideParts {
   accessory: PartId<"accessory">;
   top: PartId<"top">;
   trousers: PartId<"trousers">;
+  shoes: PartId<"shoes">;
 }
 
 /** Accessory ids that render as eyewear. */
@@ -518,6 +519,90 @@ export function drawGlasses(g: Ctx2D, id: GlassesId): void {
   P(g, 19, 13, 2, 1, l); // glint
 }
 
+/* ---------- shoes (drawn over the bottom of the legs) ---------- */
+
+export function drawShoes(g: Ctx2D, id: PartId<"shoes">, skin: string): void {
+  if (id === "none") return;
+  shoeFront(g, 9, id, -1, skin); // left foot (leg x9–13)
+  shoeFront(g, 18, id, 1, skin); // right foot (leg x18–22)
+}
+
+function shoeFront(g: Ctx2D, x: number, id: PartId<"shoes">, side: number, skin: string): void {
+  switch (id) {
+    case "sneakers":
+      P(g, x, 38, 5, 1, "#eef0f4");
+      P(g, x, 39, 5, 1, "#3a86ff");
+      px(g, x + 2, 38, "#c9ccd6");
+      break;
+    case "boots":
+      P(g, x, 37, 5, 3, "#5a3a1a");
+      P(g, x, 37, 5, 1, "#6b4a2a");
+      P(g, x, 39, 5, 1, "#2a1a0a");
+      break;
+    case "dress-shoes":
+      P(g, x, 38, 5, 2, "#1c1c22");
+      px(g, x + 1, 38, "#3a3a44");
+      break;
+    case "sandals":
+      P(g, x, 38, 5, 2, skin);
+      P(g, x, 39, 5, 1, "#5a3a2a");
+      px(g, x + 1, 38, "#5a3a2a");
+      px(g, x + 3, 38, "#5a3a2a");
+      break;
+    case "heels":
+      P(g, x, 38, 5, 2, "#c01622");
+      px(g, x + 2, 38, "#ff6b78");
+      px(g, side < 0 ? x : x + 4, 39, "#7a0e16");
+      break;
+    case "rubber-boots":
+      P(g, x, 37, 5, 3, "#ffd166");
+      P(g, x, 37, 5, 1, "#ffe09a");
+      break;
+    case "clown-shoes": {
+      const x0 = side < 0 ? x - 2 : x;
+      P(g, x0, 38, 7, 2, "#e63946");
+      P(g, x0, 39, 7, 1, "#b51e2b");
+      px(g, side < 0 ? x0 : x0 + 6, 38, "#ff8a93");
+      break;
+    }
+  }
+}
+
+const SIDE_SHOE_COLOR: Record<PartId<"shoes">, string> = {
+  sneakers: "#eef0f4",
+  boots: "#5a3a1a",
+  "dress-shoes": "#1c1c22",
+  sandals: "#7a5a3a",
+  heels: "#c01622",
+  "rubber-boots": "#ffd166",
+  "clown-shoes": "#e63946",
+  none: "#000000",
+};
+
+/** Shoes for the profile view (figure faces right; toe points +x). */
+export function drawShoesSide(g: Ctx2D, id: PartId<"shoes">): void {
+  if (id === "none") return;
+  const c = SIDE_SHOE_COLOR[id];
+  const c2 = shade(c, -0.28);
+  if (id === "clown-shoes") {
+    P(g, 11, 39, 5, 1, c2);
+    P(g, 15, 39, 9, 1, c); // long toe to x23
+    px(g, 23, 39, "#ff8a93");
+    return;
+  }
+  P(g, 11, 39, 5, 1, c2); // back foot
+  P(g, 15, 39, 6, 1, c); // front foot + toe
+  if (id === "boots" || id === "rubber-boots") {
+    P(g, 15, 38, 4, 1, c);
+    P(g, 12, 38, 3, 1, c2);
+  }
+  if (id === "dress-shoes") px(g, 19, 39, shade(c, 0.6));
+  if (id === "sandals") {
+    px(g, 16, 39, "#3a2a1a");
+    px(g, 18, 39, "#3a2a1a");
+  }
+}
+
 /* ---------- side / profile view (faces right; mirrored for left) ---------- */
 
 export function drawSide(g: Ctx2D, s: SideParts, skin: string, cloth: string, gx: "m" | "w" | "n"): void {
@@ -528,8 +613,7 @@ export function drawSide(g: Ctx2D, s: SideParts, skin: string, cloth: string, gx
   P(g, 11, 33, 5, 7, shade(PC, -0.2)); // back leg
   P(g, 15, 33, 5, 7, PC); // front leg
   P(g, 11, 33, 9, 2, shade(PC, 0.15)); // hip/belt
-  P(g, 15, 39, 3, 1, "#2a2a30");
-  P(g, 19, 39, 3, 1, "#1f1f25"); // shoes
+  drawShoesSide(g, s.shoes);
   // torso
   const suit = s.top === "suit";
   const tcol =

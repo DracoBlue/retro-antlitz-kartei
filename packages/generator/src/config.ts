@@ -13,6 +13,7 @@ export const DEFAULT_CONFIG: Readonly<AvatarConfig> = Object.freeze({
   trousers: "suit-trousers",
   build: "medium",
   accessory: "none",
+  shoes: "dress-shoes",
   skin: SKIN[2], // #e0ac69
   clothing: CLOTH[2], // #3a86ff
   background: BG[1], // #3a86ff
@@ -48,6 +49,7 @@ export function normalizeConfig(input: Partial<AvatarConfig> = {}): AvatarConfig
     trousers: normPart("trousers", input.trousers),
     build: normPart("build", input.build),
     accessory: normPart("accessory", input.accessory),
+    shoes: normPart("shoes", input.shoes),
     skin: normColor(input.skin, DEFAULT_CONFIG.skin),
     clothing: normColor(input.clothing, DEFAULT_CONFIG.clothing),
     background: normColor(input.background, DEFAULT_CONFIG.background),
@@ -114,6 +116,8 @@ function buildConfig(rng: Rng): AvatarConfig {
     background: pickColor(rng, BG),
     build: pickId(rng, "build"),
     accessory: pickId(rng, "accessory"),
+    // Appended last so existing seeds keep all their other parts unchanged.
+    shoes: pickId(rng, "shoes"),
     view: "front",
   };
 }

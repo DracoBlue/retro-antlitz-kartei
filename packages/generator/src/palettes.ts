@@ -15,6 +15,7 @@ export const PARTS = {
   trousers: ["suit-trousers", "jeans", "cargo", "shorts", "bell-bottoms", "sweatpants", "lederhosen", "plaid"],
   build: ["small", "medium", "large"],
   accessory: ["none", "nerd-glasses", "round-glasses", "sunglasses", "monocle", "full-beard", "moustache", "goatee"],
+  shoes: ["sneakers", "boots", "dress-shoes", "sandals", "heels", "rubber-boots", "clown-shoes", "none"],
 } as const;
 
 /** A part of the figure, e.g. `"hat"` or `"trousers"`. */
@@ -34,6 +35,7 @@ export const PART_LABELS: Record<PartKey, readonly string[]> = {
   trousers: ["Suit Trousers", "Jeans", "Cargo", "Shorts", "Bell-Bottoms", "Sweatpants", "Lederhosen", "Plaid"],
   build: ["Small", "Medium", "Large"],
   accessory: ["None", "Nerd Glasses", "Round Glasses", "Sunglasses", "Monocle", "Full Beard", "Moustache", "Goatee"],
+  shoes: ["Sneakers", "Boots", "Dress Shoes", "Sandals", "Heels", "Rubber Boots", "Clown Shoes", "Barefoot"],
 };
 
 /** The render-order index of a part id, or `-1` if unknown. */

@@ -9,6 +9,7 @@ import {
   px,
   clr,
   drawTrousers,
+  drawShoes,
   drawTop,
   drawHead,
   drawEars,
@@ -53,6 +54,7 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
         accessory: config.accessory,
         top: config.top,
         trousers: config.trousers,
+        shoes: config.shoes,
       },
       skin,
       clothing,
@@ -60,6 +62,7 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
     );
   } else {
     drawTrousers(g, config.trousers, skin);
+    drawShoes(g, config.shoes, skin);
     drawTop(g, config.top, clothing, skin);
     if (gx === "w") {
       clr(g, 8, 24);
