@@ -173,7 +173,8 @@ export async function configFromImage(
   const entries = await mapLimit(specs, 4, async (spec) => {
     try {
       const session: any = await LM.create({
-        expectedInputs: [{ type: "image" }],
+        expectedInputs: [{ type: "image" }, { type: "text", languages: ["en"] }],
+        expectedOutputs: [{ type: "text", languages: ["en"] }],
         initialPrompts: [{ role: "system", content: "You pick one cartoon-avatar attribute from a photo of a person." }],
       });
       try {
@@ -226,6 +227,8 @@ export async function createAiSession(onDownload?: (fraction: number) => void): 
   const LM = getLM();
   if (!LM) throw new Error("Prompt API not available in this browser.");
   return LM.create({
+    expectedInputs: [{ type: "text", languages: ["en"] }],
+    expectedOutputs: [{ type: "text", languages: ["en"] }],
     initialPrompts: [{ role: "system", content: systemPrompt() }],
     monitor(m: any) {
       m?.addEventListener?.("downloadprogress", (e: any) => onDownload?.(e.loaded ?? 0));
