@@ -14,13 +14,13 @@ function MagicModal({ onConfig, onClose }: { onConfig: (cfg: AvatarConfig) => vo
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sessionRef = useRef<any>(null);
 
-  async function runPrompt(text: string) {
-    if (!text.trim()) return;
+  async function runPrompt(text: string): Promise<boolean> {
+    if (!text.trim()) return false;
     setStatus("Checking on-device model…");
     const avail = await aiAvailability();
     if (avail === "unavailable") {
       setStatus("Prompt API unavailable. Use Chrome and enable chrome://flags/#prompt-api-for-gemini-nano.");
-      return;
+      return false;
     }
     if (!sessionRef.current) {
       if (avail !== "available") setStatus("Downloading the on-device model (one-time)…");
@@ -28,35 +28,39 @@ function MagicModal({ onConfig, onClose }: { onConfig: (cfg: AvatarConfig) => vo
     }
     setStatus("Thinking…");
     onConfig(await configFromPrompt(sessionRef.current, text.trim()));
-    setStatus("Configured from your description ✨");
+    return true;
   }
 
   async function generate() {
     if (busy || !desc.trim()) return;
     setBusy(true);
+    let ok = false;
     try {
-      await runPrompt(desc);
+      ok = await runPrompt(desc);
     } catch (e) {
       setStatus("Error: " + (e instanceof Error ? e.message : String(e)));
     } finally {
       setBusy(false);
     }
+    if (ok) onClose();
   }
 
   async function handleImage(file: File) {
     if (busy) return;
     setBusy(true);
     setDesc("📷 " + file.name);
+    let ok = false;
     try {
       setStatus("Reading the image…");
       const cfg = await configFromImage(file, (d, t) => setStatus(`Reading features… ${d}/${t}`));
       onConfig(cfg);
-      setStatus("Configured from your image ✨");
+      ok = true;
     } catch (e) {
       setStatus("Image error: " + (e instanceof Error ? e.message : String(e)));
     } finally {
       setBusy(false);
     }
+    if (ok) onClose();
   }
 
   function onDrop(e: React.DragEvent) {
