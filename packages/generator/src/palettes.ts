@@ -7,7 +7,7 @@
  */
 export const PARTS = {
   hat: ["none", "top-hat", "crown", "hard-hat", "peaked-cap", "tyrolean-hat", "pickelhaube", "halo"],
-  hair: ["bald", "side-part", "tousled", "mullet", "blow-wave", "mohawk", "bun", "messy"],
+  hair: ["bald", "side-part", "tousled", "mullet", "blow-wave", "mohawk", "bun", "messy", "receding"],
   ears: ["normal", "sail-ears", "pointed", "small", "sticking-out", "floppy", "elf", "huge"],
   nose: ["button", "aquiline", "bulbous", "pointed", "wide", "hooked", "snub", "clown"],
   mouth: ["smile", "grimace", "pout", "grin", "scream", "line", "snarl", "whistle"],
@@ -27,7 +27,7 @@ export type PartId<K extends PartKey = PartKey> = (typeof PARTS)[K][number];
 /** Human-readable display labels parallel to {@link PARTS}. UI-only. */
 export const PART_LABELS: Record<PartKey, readonly string[]> = {
   hat: ["None", "Top Hat", "Crown", "Hard Hat", "Peaked Cap", "Tyrolean Hat", "Pickelhaube", "Halo"],
-  hair: ["Bald", "Side Part", "Tousled", "Mullet", "Blow Wave", "Mohawk", "Bun", "Messy"],
+  hair: ["Bald", "Side Part", "Tousled", "Mullet", "Blow Wave", "Mohawk", "Bun", "Messy", "Receding"],
   ears: ["Normal", "Sail Ears", "Pointed", "Small", "Sticking Out", "Floppy", "Elf", "Huge"],
   nose: ["Button", "Aquiline", "Bulbous", "Pointed", "Wide", "Hooked", "Snub", "Clown"],
   mouth: ["Smile", "Grimace", "Pout", "Grin", "Scream", "Line", "Snarl", "Whistle"],

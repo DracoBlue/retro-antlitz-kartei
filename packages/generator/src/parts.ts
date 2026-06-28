@@ -412,6 +412,16 @@ export function drawHair(g: Ctx2D, id: PartId<"hair">): void {
       P(g, 8, 7, 1, 3, h);
       P(g, 23, 7, 1, 3, h);
       break;
+    case "receding": // short, combed back, with a receding hairline (temples)
+      P(g, 11, 7, 10, 1, h); // thin top, set back
+      P(g, 10, 8, 12, 1, h); // hairline row across the forehead top
+      P(g, 9, 8, 1, 6, h); // left side down past the ear
+      P(g, 22, 8, 1, 6, h); // right side
+      P(g, 11, 7, 10, 1, hh); // highlight
+      clr(g, 10, 8); // recede the front corners (Geheimratsecken)
+      clr(g, 21, 8);
+      px(g, 16, 8, hd); // hint of a side part
+      break;
   }
 }
 
@@ -762,6 +772,10 @@ export function drawSide(g: Ctx2D, s: SideParts, skin: string, cloth: string, pa
     if (s.hair === "mohawk") {
       P(g, 10, 3, 3, 6, "#e63946");
       P(g, 10, 8, 11, 2, h);
+    } else if (s.hair === "receding") {
+      P(g, 8, 6, 9, 2, hc); // short top, recedes before the face
+      P(g, 8, 8, 2, 2, hc); // upper back
+      P(g, 7, 9, 2, 7, hc); // side/back down past the ear
     } else {
       P(g, 8, 6, 13, 3, hc);
       P(g, 7, 8, 2, 9, hc);
