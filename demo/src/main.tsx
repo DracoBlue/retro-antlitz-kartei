@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 import { AvatarEditor } from "@retro-antlitz-kartei/react-editor";
-import { encodeConfig, type AvatarConfig } from "@retro-antlitz-kartei/generator";
+
+const REPO = "https://github.com/DracoBlue/retro-antlitz-kartei";
 
 function App(): React.ReactElement {
-  const [code, setCode] = useState<string>("");
-  const onChange = (cfg: AvatarConfig) => setCode(encodeConfig(cfg));
   return (
     <>
-      <AvatarEditor seed="Ada Lovelace" onChange={onChange} />
+      <AvatarEditor seed="Ada Lovelace" defaultLayout="kompakt" showLayoutPicker={false} />
       <footer
         style={{
           position: "fixed",
@@ -20,10 +19,11 @@ function App(): React.ReactElement {
           color: "#ffffff99",
           background: "#00000055",
           textAlign: "center",
-          pointerEvents: "none",
         }}
       >
-        @retro-antlitz-kartei — last config code: <span style={{ color: "#fff" }}>{code || "(edit to generate)"}</span>
+        <a href={REPO} target="_blank" rel="noreferrer" style={{ color: "#fff" }}>
+          @retro-antlitz-kartei
+        </a>
       </footer>
     </>
   );

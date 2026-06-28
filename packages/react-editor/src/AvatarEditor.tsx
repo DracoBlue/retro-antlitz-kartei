@@ -129,12 +129,6 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
       link.href = href;
       document.head.appendChild(link);
     }
-    if (!document.getElementById("rak-keyframes")) {
-      const s = document.createElement("style");
-      s.id = "rak-keyframes";
-      s.textContent = "@keyframes rak-coinpulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}";
-      document.head.appendChild(s);
-    }
   }, [loadFonts]);
 
   const patch = useCallback((p: Partial<AvatarConfig>) => setConfig({ ...config, ...p }), [config, setConfig]);
@@ -559,22 +553,6 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
               &#127922; RANDOM
             </button>
           </div>
-        </div>
-
-        <div
-          style={{
-            background: t.marqueeBg,
-            padding: "10px",
-            display: "flex",
-            gap: "10px",
-            alignItems: "center",
-            justifyContent: "center",
-            color: t.title,
-            borderTop: "3px solid " + t.cabinetBorder,
-          }}
-        >
-          <span style={{ color: t.accent, fontSize: "14px", animation: "rak-coinpulse 1.2s ease-in-out infinite" }}>&#9679;</span>
-          <span style={{ fontFamily: t.mono, fontSize: "8px", letterSpacing: "1px" }}>INSERT COIN &middot; SATIRE EDITION</span>
         </div>
       </div>
 

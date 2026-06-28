@@ -54,7 +54,7 @@ export function theme(layout: Layout): Theme {
       mono: MONO,
       body: BODY,
       radius: "14px",
-      titleText: "AVATAR EDITOR",
+      titleText: "@retro-antlitz-kartei AVATAR EDITOR",
       glow: false,
       paper: false,
     };
