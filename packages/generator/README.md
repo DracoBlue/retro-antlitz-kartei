@@ -69,6 +69,7 @@ interface AvatarConfig {
   accessory: "none" | "nerd-glasses" | "full-beard" | …;
   shoes: "sneakers" | "boots" | "dress-shoes" | "clown-shoes" | …;
   skin: string;          // hex, e.g. "#e0ac69"
+  hairColor: string;     // hex — hair & beard colour
   topColor: string;      // hex
   trousersColor: string; // hex — trouser colour
   background: string;    // hex

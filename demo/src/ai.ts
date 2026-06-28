@@ -2,7 +2,7 @@
 // Experimental + Chrome-only; lives in the demo, not the library. Enable
 // chrome://flags/#prompt-api-for-gemini-nano (+ the on-device model) to try it.
 // Docs: https://developer.chrome.com/docs/ai/prompt-api
-import { PARTS, PART_LABELS, SKIN, normalizeConfig, type AvatarConfig } from "@retro-antlitz-kartei/generator";
+import { PARTS, PART_LABELS, SKIN, HAIRS, normalizeConfig, type AvatarConfig } from "@retro-antlitz-kartei/generator";
 
 export type Availability = "unavailable" | "downloadable" | "downloading" | "available";
 
@@ -41,12 +41,13 @@ function buildSchema() {
   const properties: Record<string, unknown> = {};
   for (const k of PART_KEYS) properties[k] = { type: "string", enum: [...PARTS[k]] };
   properties.skin = { type: "string", enum: [...SKIN], description: "skin tone" };
+  properties.hairColor = { type: "string", enum: [...HAIRS], description: "natural hair colour" };
   for (const c of FREE_COLOR_KEYS) properties[c] = { type: "string", description: "a #rrggbb hex colour" };
   properties.view = { type: "string", enum: ["front", "left", "right"] };
   return {
     type: "object",
     properties,
-    required: [...PART_KEYS, "skin", ...FREE_COLOR_KEYS, "view"],
+    required: [...PART_KEYS, "skin", "hairColor", ...FREE_COLOR_KEYS, "view"],
     additionalProperties: false,
   };
 }
@@ -60,7 +61,7 @@ function systemPrompt(): string {
     "Pick, for each part, the id that best matches the description; if it isn't mentioned, choose a sensible, fitting option.",
     "Parts and their allowed ids (id (label)):",
     ...lines,
-    "skin: pick the closest natural skin tone from the allowed values (a hex from the palette) — never an unnatural colour.",
+    "skin and hairColor: pick the closest natural tone from the allowed values (a hex from the palette) — never an unnatural colour. Match hairColor to any described hair colour (e.g. blonde, grey, black).",
     "Colours topColor (the top garment), trousersColor, background: return a #rrggbb hex matching any colour mentioned, otherwise a fitting one.",
     "build is the body size (small/medium/large). Set view to 'front' unless a side profile is requested.",
     "Respond with structured JSON only.",

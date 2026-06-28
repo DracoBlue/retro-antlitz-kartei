@@ -1,5 +1,5 @@
 export type { AvatarConfig, View, Ctx2D, SpriteCanvas } from "./types.js";
-export { PARTS, PART_LABELS, partIndex, partLabel, SKIN, CLOTH, BG, PANTS, HAIR, type PartKey, type PartId } from "./palettes.js";
+export { PARTS, PART_LABELS, partIndex, partLabel, SKIN, CLOTH, BG, PANTS, HAIR, HAIRS, type PartKey, type PartId } from "./palettes.js";
 export { shade } from "./color.js";
 export { createCanvas } from "./canvas.js";
 export { COLS, ROWS } from "./parts.js";

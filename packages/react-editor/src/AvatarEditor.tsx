@@ -6,6 +6,7 @@ import {
   PARTS,
   partLabel,
   SKIN,
+  HAIRS,
   CLOTH,
   BG,
   PANTS,
@@ -555,6 +556,15 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                 {SKIN.map((c) => (
                   <button key={c} onClick={() => patch({ skin: c })} style={swatchBtn(c, config.skin === c)} />
+                ))}
+              </div>
+            </div>
+
+            <div style={swatchRowStyle}>
+              <span style={swatchLabelStyle}>HAIR</span>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                {HAIRS.map((c) => (
+                  <button key={c} onClick={() => patch({ hairColor: c })} style={swatchBtn(c, config.hairColor === c)} />
                 ))}
               </div>
             </div>

@@ -1,7 +1,6 @@
 import type { AvatarConfig, Ctx2D, SpriteCanvas, View } from "./types.js";
 import { createCanvas } from "./canvas.js";
 import { shade } from "./color.js";
-import { HAIR } from "./palettes.js";
 import {
   COLS,
   ROWS,
@@ -40,8 +39,10 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
   const { canvas, ctx: g } = createCanvas(COLS, ROWS);
   g.imageSmoothingEnabled = false;
 
-  const { skin, topColor, accessory } = config;
-  const gx: "m" | "w" | "n" = config.build === "small" ? "w" : config.build === "large" ? "m" : "n";
+  const { skin, topColor, accessory, hairColor } = config;
+  // Build drives the head/jaw frame: small = narrow, large = broad, medium = neutral.
+  const frame: "narrow" | "neutral" | "broad" =
+    config.build === "small" ? "narrow" : config.build === "large" ? "broad" : "neutral";
 
   if (view === "left" || view === "right") {
     drawSide(
@@ -59,45 +60,46 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
       skin,
       topColor,
       config.trousersColor,
-      gx,
+      hairColor,
+      frame,
     );
   } else {
     drawTrousers(g, config.trousers, config.trousersColor, skin);
     drawShoes(g, config.shoes, skin);
     drawTop(g, config.top, topColor, skin);
-    if (gx === "w") {
+    if (frame === "narrow") {
       clr(g, 8, 24);
       clr(g, 23, 24);
     }
     drawHead(g, skin);
-    if (gx === "w") {
+    if (frame === "narrow") {
       clr(g, 10, 21);
       clr(g, 21, 21);
       clr(g, 9, 20);
       clr(g, 22, 20);
-    } else if (gx === "m") {
+    } else if (frame === "broad") {
       P(g, 9, 21, 1, 1, skin);
       P(g, 22, 21, 1, 1, skin);
       P(g, 10, 21, 12, 1, shade(skin, -0.22));
     }
     drawEars(g, config.ears, skin);
-    // eyes
-    P(g, 11, 12, 2, 1, HAIR);
-    P(g, 18, 12, 2, 1, HAIR);
+    // eyes — brows take the hair colour
+    P(g, 11, 12, 2, 1, hairColor);
+    P(g, 18, 12, 2, 1, hairColor);
     P(g, 11, 13, 2, 2, "#fff");
     P(g, 18, 13, 2, 2, "#fff");
     px(g, 12, 14, "#26324a");
     px(g, 18, 14, "#26324a");
-    if (gx === "w") {
-      px(g, 10, 13, HAIR);
-      px(g, 10, 12, HAIR);
-      px(g, 20, 13, HAIR);
-      px(g, 20, 12, HAIR);
+    if (frame === "narrow") {
+      px(g, 10, 13, hairColor);
+      px(g, 10, 12, hairColor);
+      px(g, 20, 13, hairColor);
+      px(g, 20, 12, hairColor);
     }
     drawNose(g, config.nose, skin);
-    if (BEARDS.includes(accessory)) drawBeard(g, accessory as BeardId);
+    if (BEARDS.includes(accessory)) drawBeard(g, accessory as BeardId, hairColor);
     drawMouth(g, config.mouth);
-    drawHair(g, config.hair);
+    drawHair(g, config.hair, hairColor);
     if (GLASSES.includes(accessory)) drawGlasses(g, accessory as GlassesId);
     drawHat(g, config.hat, topColor);
   }

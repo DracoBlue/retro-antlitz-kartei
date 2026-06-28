@@ -1,7 +1,6 @@
 import type { Ctx2D } from "./types.js";
 import type { PartId } from "./palettes.js";
 import { shade } from "./color.js";
-import { HAIR } from "./palettes.js";
 
 /** Part ids the profile view needs, taken straight from the config. */
 export interface SideParts {
@@ -321,8 +320,8 @@ export function drawMouth(g: Ctx2D, id: PartId<"mouth">): void {
   }
 }
 
-export function drawBeard(g: Ctx2D, id: BeardId): void {
-  const h = HAIR;
+export function drawBeard(g: Ctx2D, id: BeardId, color: string): void {
+  const h = color;
   const hd = shade(h, -0.2);
   if (id === "moustache") {
     P(g, 12, 18, 7, 1, h);
@@ -349,9 +348,9 @@ export function drawBeard(g: Ctx2D, id: BeardId): void {
   P(g, 13, 21, 6, 1, hd); // chin shade
 }
 
-export function drawHair(g: Ctx2D, id: PartId<"hair">): void {
+export function drawHair(g: Ctx2D, id: PartId<"hair">, color: string): void {
   if (id === "bald") return;
-  const h = HAIR;
+  const h = color;
   const hd = shade(h, -0.22);
   const hh = shade(h, 0.18);
   switch (id) {
@@ -628,9 +627,17 @@ export function drawShoesSide(g: Ctx2D, id: PartId<"shoes">, skin: string): void
 
 /* ---------- side / profile view (faces right; mirrored for left) ---------- */
 
-export function drawSide(g: Ctx2D, s: SideParts, skin: string, cloth: string, pants: string, gx: "m" | "w" | "n"): void {
+export function drawSide(
+  g: Ctx2D,
+  s: SideParts,
+  skin: string,
+  cloth: string,
+  pants: string,
+  hairColor: string,
+  frame: "narrow" | "neutral" | "broad",
+): void {
   const sd = shade(skin, -0.22);
-  const h = HAIR;
+  const h = hairColor;
   // legs
   const PC = pants;
   P(g, 11, 33, 5, 7, shade(PC, -0.2)); // back leg
@@ -727,10 +734,10 @@ export function drawSide(g: Ctx2D, s: SideParts, skin: string, cloth: string, pa
     P(g, 18, 19, 3, 1, m);
   }
   P(g, 18, 20, 3, 1, sd); // chin
-  if (gx === "m") {
+  if (frame === "broad") {
     P(g, 17, 21, 4, 1, sd);
     P(g, 20, 19, 1, 2, skin);
-  } else if (gx === "w") {
+  } else if (frame === "narrow") {
     clr(g, 20, 21);
     clr(g, 19, 21);
   }
