@@ -2,7 +2,7 @@
 // Experimental + Chrome-only; lives in the demo, not the library. Enable
 // chrome://flags/#prompt-api-for-gemini-nano (+ the on-device model) to try it.
 // Docs: https://developer.chrome.com/docs/ai/prompt-api
-import { PARTS, PART_LABELS, normalizeConfig, type AvatarConfig } from "@retro-antlitz-kartei/generator";
+import { PARTS, PART_LABELS, SKIN, normalizeConfig, type AvatarConfig } from "@retro-antlitz-kartei/generator";
 
 export type Availability = "unavailable" | "downloadable" | "downloading" | "available";
 
@@ -31,19 +31,22 @@ export async function aiAvailability(): Promise<Availability> {
   return "unavailable";
 }
 
-const COLOR_KEYS = ["skin", "topColor", "trousersColor", "background"] as const;
+// Skin is constrained to the natural skin-tone palette; the other colours stay
+// free-form hex so descriptions like "bright red coat" work.
+const FREE_COLOR_KEYS = ["topColor", "trousersColor", "background"] as const;
 const PART_KEYS = Object.keys(PARTS) as (keyof typeof PARTS)[];
 
-/** JSON schema for structured output — parts are enums, colours are hex strings. */
+/** JSON schema for structured output — parts + skin are enums, other colours are hex. */
 function buildSchema() {
   const properties: Record<string, unknown> = {};
   for (const k of PART_KEYS) properties[k] = { type: "string", enum: [...PARTS[k]] };
-  for (const c of COLOR_KEYS) properties[c] = { type: "string", description: "a #rrggbb hex colour" };
+  properties.skin = { type: "string", enum: [...SKIN], description: "skin tone" };
+  for (const c of FREE_COLOR_KEYS) properties[c] = { type: "string", description: "a #rrggbb hex colour" };
   properties.view = { type: "string", enum: ["front", "left", "right"] };
   return {
     type: "object",
     properties,
-    required: [...PART_KEYS, ...COLOR_KEYS, "view"],
+    required: [...PART_KEYS, "skin", ...FREE_COLOR_KEYS, "view"],
     additionalProperties: false,
   };
 }
@@ -57,7 +60,8 @@ function systemPrompt(): string {
     "Pick, for each part, the id that best matches the description; if it isn't mentioned, choose a sensible, fitting option.",
     "Parts and their allowed ids (id (label)):",
     ...lines,
-    "Colours — skin, topColor (the top garment), trousersColor, background: return a #rrggbb hex matching any colour mentioned, otherwise a fitting one.",
+    "skin: pick the closest natural skin tone from the allowed values (a hex from the palette) — never an unnatural colour.",
+    "Colours topColor (the top garment), trousersColor, background: return a #rrggbb hex matching any colour mentioned, otherwise a fitting one.",
     "build is the body size (small/medium/large). Set view to 'front' unless a side profile is requested.",
     "Respond with structured JSON only.",
   ].join("\n");
