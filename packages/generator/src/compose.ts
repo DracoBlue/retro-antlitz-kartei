@@ -39,10 +39,7 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
   const { canvas, ctx: g } = createCanvas(COLS, ROWS);
   g.imageSmoothingEnabled = false;
 
-  const { skin, topColor, accessory, hairColor } = config;
-  // Build drives the head/jaw frame: small = narrow, large = broad, medium = neutral.
-  const frame: "narrow" | "neutral" | "broad" =
-    config.build === "small" ? "narrow" : config.build === "large" ? "broad" : "neutral";
+  const { skin, topColor, accessory, hairColor, build } = config;
 
   if (view === "left" || view === "right") {
     drawSide(
@@ -61,23 +58,23 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
       topColor,
       config.trousersColor,
       hairColor,
-      frame,
+      build,
     );
   } else {
     drawTrousers(g, config.trousers, config.trousersColor, skin);
     drawShoes(g, config.shoes, skin);
     drawTop(g, config.top, topColor, skin);
-    if (frame === "narrow") {
+    if (build === "small") {
       clr(g, 8, 24);
       clr(g, 23, 24);
     }
     drawHead(g, skin);
-    if (frame === "narrow") {
+    if (build === "small") {
       clr(g, 10, 21);
       clr(g, 21, 21);
       clr(g, 9, 20);
       clr(g, 22, 20);
-    } else if (frame === "broad") {
+    } else if (build === "large") {
       P(g, 9, 21, 1, 1, skin);
       P(g, 22, 21, 1, 1, skin);
       P(g, 10, 21, 12, 1, shade(skin, -0.22));
@@ -90,7 +87,7 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
     P(g, 18, 13, 2, 2, "#fff");
     px(g, 12, 14, "#26324a");
     px(g, 18, 14, "#26324a");
-    if (frame === "narrow") {
+    if (build === "small") {
       px(g, 10, 13, hairColor);
       px(g, 10, 12, hairColor);
       px(g, 20, 13, hairColor);

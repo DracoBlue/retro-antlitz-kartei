@@ -634,7 +634,7 @@ export function drawSide(
   cloth: string,
   pants: string,
   hairColor: string,
-  frame: "narrow" | "neutral" | "broad",
+  build: PartId<"build">,
 ): void {
   const sd = shade(skin, -0.22);
   const h = hairColor;
@@ -734,10 +734,10 @@ export function drawSide(
     P(g, 18, 19, 3, 1, m);
   }
   P(g, 18, 20, 3, 1, sd); // chin
-  if (frame === "broad") {
+  if (build === "large") {
     P(g, 17, 21, 4, 1, sd);
     P(g, 20, 19, 1, 2, skin);
-  } else if (frame === "narrow") {
+  } else if (build === "small") {
     clr(g, 20, 21);
     clr(g, 19, 21);
   }

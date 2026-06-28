@@ -4,7 +4,5 @@
 ---
 
 Add a configurable `hairColor` (hair, beard and eyebrows), selectable from a
-natural hair-tone palette (`HAIRS`) with a HAIR swatch row in the editor — no
-more hardcoded dark-brown hair. Internally, the build→head-shape variable was
-renamed from the old gender-era `gx` ("m"/"w"/"n") to `frame`
-("narrow"/"neutral"/"broad").
+natural hair-tone palette (`HAIRS`) with a HAIR swatch row in the editor and an
+enum in the demo's AI schema — no more hardcoded dark-brown hair.
