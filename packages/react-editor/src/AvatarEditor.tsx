@@ -530,7 +530,7 @@ export function AvatarEditor(props: AvatarEditorProps): React.ReactElement {
               <span style={swatchLabelStyle}>CLOTHING</span>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                 {CLOTH.map((c) => (
-                  <button key={c} onClick={() => patch({ clothing: c })} style={swatchBtn(c, config.clothing === c)} />
+                  <button key={c} onClick={() => patch({ topColor: c })} style={swatchBtn(c, config.topColor === c)} />
                 ))}
               </div>
             </div>

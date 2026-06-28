@@ -40,7 +40,7 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
   const { canvas, ctx: g } = createCanvas(COLS, ROWS);
   g.imageSmoothingEnabled = false;
 
-  const { skin, clothing, accessory } = config;
+  const { skin, topColor, accessory } = config;
   const gx: "m" | "w" | "n" = config.build === "small" ? "w" : config.build === "large" ? "m" : "n";
 
   if (view === "left" || view === "right") {
@@ -57,14 +57,14 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
         shoes: config.shoes,
       },
       skin,
-      clothing,
+      topColor,
       config.trousersColor,
       gx,
     );
   } else {
     drawTrousers(g, config.trousers, config.trousersColor, skin);
     drawShoes(g, config.shoes, skin);
-    drawTop(g, config.top, clothing, skin);
+    drawTop(g, config.top, topColor, skin);
     if (gx === "w") {
       clr(g, 8, 24);
       clr(g, 23, 24);
@@ -99,7 +99,7 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
     drawMouth(g, config.mouth);
     drawHair(g, config.hair);
     if (GLASSES.includes(accessory)) drawGlasses(g, accessory as GlassesId);
-    drawHat(g, config.hat, clothing);
+    drawHat(g, config.hat, topColor);
   }
 
   outline(g);

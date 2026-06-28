@@ -21,7 +21,7 @@ export interface AvatarConfig {
   nose: PartId<"nose">;
   /** Mouth. */
   mouth: PartId<"mouth">;
-  /** Upper body / clothing cut. */
+  /** Upper body cut. */
   top: PartId<"top">;
   /** Trousers. */
   trousers: PartId<"trousers">;
@@ -33,8 +33,8 @@ export interface AvatarConfig {
   shoes: PartId<"shoes">;
   /** Skin tone, any `#rrggbb` hex. */
   skin: string;
-  /** Top / clothing colour, any `#rrggbb` hex. */
-  clothing: string;
+  /** Top colour, any `#rrggbb` hex. */
+  topColor: string;
   /** Trouser colour, any `#rrggbb` hex. */
   trousersColor: string;
   /** Background colour, any `#rrggbb` hex. */

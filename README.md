@@ -68,7 +68,7 @@ share codes, or the drawing code (parts are dispatched by id, not index):
 { "hat": "top-hat", "hair": "side-part", "ears": "normal", "nose": "button",
   "mouth": "smile", "top": "suit", "trousers": "suit-trousers",
   "build": "medium", "accessory": "none", "skin": "#e0ac69",
-  "clothing": "#3a86ff", "background": "#3a86ff", "view": "front" }
+  "topColor": "#3a86ff", "background": "#3a86ff", "view": "front" }
 ```
 
 Codes are base64 of exactly this object. `encodeConfig` / `decodeConfig`

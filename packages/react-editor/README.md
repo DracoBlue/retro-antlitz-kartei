@@ -22,7 +22,7 @@ const [cfg, setCfg] = useState(() => normalizeConfig({ hat: "crown" }));
 <AvatarEditor value={cfg} onChange={setCfg} defaultLayout="kompakt" />;
 ```
 
-The editor renders a live preview, part cyclers, skin/clothing/background
+The editor renders a live preview, part cyclers, skin/top/trousers/background
 swatches, a view switcher (left/front/right), a layout switcher
 (arcade/compact/wanted), a shareable code box, a seed input, and a tap-to-open
 **combat modal** with pose buttons.

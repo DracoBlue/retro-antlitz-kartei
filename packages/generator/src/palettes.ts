@@ -52,7 +52,7 @@ export function partLabel<K extends PartKey>(key: K, id: string): string {
 /** Selectable skin tones (hex). The editor offers these; configs may use any hex. */
 export const SKIN = ["#ffe0bd", "#f2c79a", "#e0ac69", "#c68642", "#8d5524", "#ff9d5c"] as const;
 
-/** Selectable clothing colours (hex). */
+/** Selectable top colours (hex). */
 export const CLOTH = ["#e63946", "#2a9d8f", "#3a86ff", "#f4a261", "#9b5de5", "#00bbf9", "#f15bb5", "#ffd60a"] as const;
 
 /** Selectable background colours (hex). */

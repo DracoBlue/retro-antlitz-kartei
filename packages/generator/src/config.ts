@@ -15,7 +15,7 @@ export const DEFAULT_CONFIG: Readonly<AvatarConfig> = Object.freeze({
   accessory: "none",
   shoes: "dress-shoes",
   skin: SKIN[2], // #e0ac69
-  clothing: CLOTH[2], // #3a86ff
+  topColor: CLOTH[2], // #3a86ff
   trousersColor: PANTS[0], // #2b3a55
   background: BG[1], // #3a86ff
   view: "front",
@@ -52,7 +52,7 @@ export function normalizeConfig(input: Partial<AvatarConfig> = {}): AvatarConfig
     accessory: normPart("accessory", input.accessory),
     shoes: normPart("shoes", input.shoes),
     skin: normColor(input.skin, DEFAULT_CONFIG.skin),
-    clothing: normColor(input.clothing, DEFAULT_CONFIG.clothing),
+    topColor: normColor(input.topColor, DEFAULT_CONFIG.topColor),
     trousersColor: normColor(input.trousersColor, DEFAULT_CONFIG.trousersColor),
     background: normColor(input.background, DEFAULT_CONFIG.background),
     view: typeof input.view === "string" && VIEWS.includes(input.view) ? input.view : DEFAULT_CONFIG.view,
@@ -114,7 +114,7 @@ function buildConfig(rng: Rng): AvatarConfig {
     top: pickId(rng, "top"),
     trousers: pickId(rng, "trousers"),
     skin: pickColor(rng, SKIN),
-    clothing: pickColor(rng, CLOTH),
+    topColor: pickColor(rng, CLOTH),
     background: pickColor(rng, BG),
     build: pickId(rng, "build"),
     accessory: pickId(rng, "accessory"),

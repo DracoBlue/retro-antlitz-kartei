@@ -33,7 +33,7 @@ describe("config shape", () => {
     expect(DEFAULT_CONFIG.view).toBe("front");
     // English keys
     expect(Object.keys(DEFAULT_CONFIG).sort()).toEqual(
-      ["accessory", "background", "build", "clothing", "ears", "hair", "hat", "mouth", "nose", "shoes", "skin", "top", "trousers", "trousersColor", "view"],
+      ["accessory", "background", "build", "ears", "hair", "hat", "mouth", "nose", "shoes", "skin", "top", "topColor", "trousers", "trousersColor", "view"],
     );
   });
 });
