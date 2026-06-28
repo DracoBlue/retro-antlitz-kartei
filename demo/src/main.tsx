@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { AvatarEditor } from "@retro-antlitz-kartei/react-editor";
 import { configFromSeed, type AvatarConfig } from "@retro-antlitz-kartei/generator";
-import { aiAvailability, createAiSession, configFromPrompt, describeImage } from "./ai.js";
+import { aiAvailability, createAiSession, configFromPrompt, configFromImage } from "./ai.js";
 
 const REPO = "https://github.com/DracoBlue/retro-antlitz-kartei";
 
@@ -47,11 +47,12 @@ function PromptBar({ onConfig }: { onConfig: (cfg: AvatarConfig) => void }): Rea
   async function handleImage(file: File) {
     if (busy) return;
     setBusy(true);
+    setDesc("📷 " + file.name);
     try {
-      setStatus("Looking at the image…");
-      const text = await describeImage(file);
-      setDesc(text);
-      await runPrompt(text);
+      setStatus("Reading the image…");
+      const cfg = await configFromImage(file, (d, t) => setStatus(`Reading features… ${d}/${t}`));
+      onConfig(cfg);
+      setStatus("Configured from your image ✨");
     } catch (e) {
       setStatus("Image error: " + (e instanceof Error ? e.message : String(e)));
     } finally {
