@@ -98,6 +98,14 @@ pnpm build                                   # packages must be built first
 pnpm --filter @retro-antlitz-kartei/demo dev # local dev server
 ```
 
+**Experimental — describe your avatar (Chrome built-in AI):** the demo has a
+"describe your avatar" bar that uses Chrome's on-device
+[Prompt API](https://developer.chrome.com/docs/ai/prompt-api) (Gemini Nano) to
+turn a text description into a config via structured output (a JSON schema built
+from `PARTS`). Chrome-only; enable
+`chrome://flags/#prompt-api-for-gemini-nano` and let the model download. It lives
+in the demo only — the published packages stay dependency-free.
+
 ## Releasing
 
 Versioning and publishing are automated with
