@@ -68,6 +68,23 @@ export function drawTrousers(g: Ctx2D, id: PartId<"trousers">, color: string, sk
     P(g, 17, 38, 6, 2, PC);
     P(g, 8, 39, 6, 1, d);
     P(g, 17, 39, 6, 1, d);
+  } else if (id === "dress") {
+    // long A-line skirt covering the legs
+    P(g, 9, 35, 14, 1, PC);
+    P(g, 8, 36, 16, 2, PC);
+    P(g, 7, 38, 18, 2, PC);
+    P(g, 7, 39, 18, 1, d); // hem
+    P(g, 13, 35, 1, 5, d); // centre fold
+    P(g, 18, 36, 1, 3, d); // side fold
+  } else if (id === "mini-skirt") {
+    // short skirt with bare legs below
+    P(g, 9, 35, 14, 1, PC);
+    P(g, 8, 36, 16, 1, PC);
+    P(g, 8, 37, 16, 1, d); // hem
+    P(g, 10, 37, 4, 3, skin); // left leg
+    P(g, 18, 37, 4, 3, skin); // right leg
+    P(g, 9, 39, 5, 1, shade(skin, -0.25));
+    P(g, 18, 39, 5, 1, shade(skin, -0.25));
   } else {
     P(g, 9, 35, 5, 5, PC);
     P(g, 18, 35, 5, 5, PC);
@@ -152,10 +169,10 @@ export function drawTop(g: Ctx2D, id: PartId<"top">, cloth: string, skin: string
       P(g, 13, 24, 6, 2, shade(cloth, 0.28)); // collar
       break;
     case "hi-vis-vest":
-      P(g, 7, 24, 18, 9, "#ff7a00");
-      P(g, 9, 26, 14, 1, "#e8e8e8");
+      P(g, 7, 24, 18, 9, "#ff7a00"); // safety-orange vest (fixed)
+      P(g, 9, 26, 14, 1, "#e8e8e8"); // reflective stripes (on the orange)
       P(g, 9, 29, 14, 1, "#e8e8e8");
-      P(g, 13, 24, 6, 9, "#3a3a3a");
+      P(g, 13, 24, 6, 9, cloth); // garment showing through the open middle → topColor
       break;
     case "leather-jacket":
       // jacket keeps the configured `cloth` colour from the base fill
@@ -638,11 +655,23 @@ export function drawSide(
 ): void {
   const sd = shade(skin, -0.22);
   const h = hairColor;
-  // legs
+  // legs (or a skirt silhouette for dress / mini-skirt)
   const PC = pants;
-  P(g, 11, 33, 5, 7, shade(PC, -0.2)); // back leg
-  P(g, 15, 33, 5, 7, PC); // front leg
-  P(g, 11, 33, 9, 2, shade(PC, 0.15)); // hip/belt
+  if (s.trousers === "dress") {
+    P(g, 11, 33, 9, 2, shade(PC, 0.15)); // waist
+    P(g, 11, 35, 9, 2, PC);
+    P(g, 10, 37, 11, 3, PC); // flare
+    P(g, 10, 39, 11, 1, shade(PC, -0.28)); // hem
+  } else if (s.trousers === "mini-skirt") {
+    P(g, 11, 33, 9, 2, shade(PC, 0.15)); // waist
+    P(g, 11, 35, 9, 2, PC); // short skirt
+    P(g, 10, 36, 11, 1, shade(PC, -0.28)); // hem
+    P(g, 13, 37, 5, 3, skin); // bare leg
+  } else {
+    P(g, 11, 33, 5, 7, shade(PC, -0.2)); // back leg
+    P(g, 15, 33, 5, 7, PC); // front leg
+    P(g, 11, 33, 9, 2, shade(PC, 0.15)); // hip/belt
+  }
   drawShoesSide(g, s.shoes, skin);
   // torso
   const suit = s.top === "suit";

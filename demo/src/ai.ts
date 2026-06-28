@@ -119,6 +119,8 @@ const HINTS: Record<string, string> = {
   mullet: "short on top, long at the back",
   "blow-wave": "voluminous blow-dried hair",
   bun: "hair tied up in a bun (pulled back)",
+  dress: "a long skirt / dress that covers the legs",
+  "mini-skirt": "a short skirt with bare legs below",
 };
 
 /** Per-field spec: the question label, allowed values, labels/hints, and optional name→hex map. */
