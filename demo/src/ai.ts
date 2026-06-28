@@ -53,6 +53,8 @@ const HAIR_BY_NAME: Record<string, string> = {
   blonde: HAIRS[4],
   grey: HAIRS[5],
   white: HAIRS[6],
+  red: HAIRS[7],
+  green: HAIRS[8],
 };
 
 /** JSON schema for structured output — parts + skin/hair colour names are enums, other colours are hex. */

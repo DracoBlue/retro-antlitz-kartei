@@ -64,5 +64,5 @@ export const PANTS = ["#2b3a55", "#3a6ea5", "#5a6b4a", "#c9a14a", "#7a4a8a", "#9
 /** The default hair colour (used when none is set). */
 export const HAIR = "#33240f";
 
-/** Selectable hair/beard colours (hex): black, dark brown, brown, auburn, blonde, grey, white. */
-export const HAIRS = ["#1a1a1f", "#33240f", "#6b4a2a", "#b5563a", "#e3c06a", "#9aa0a6", "#e8e8e8"] as const;
+/** Selectable hair/beard colours (hex): black, dark brown, brown, auburn, blonde, grey, white, plus two punk shades (red, green). */
+export const HAIRS = ["#1a1a1f", "#33240f", "#6b4a2a", "#b5563a", "#e3c06a", "#9aa0a6", "#e8e8e8", "#e63946", "#06d6a0"] as const;
