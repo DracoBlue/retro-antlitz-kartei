@@ -24,8 +24,10 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # Build first: animate/react-editor type-check against the generator's
+      # emitted .d.ts, so dist must exist before typecheck/test.
+      - run: pnpm build
+
       - run: pnpm typecheck
 
       - run: pnpm test
-
-      - run: pnpm build
