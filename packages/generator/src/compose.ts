@@ -17,6 +17,7 @@ import {
   drawBeard,
   drawHair,
   drawGlasses,
+  drawLashes,
   drawHat,
   drawSide,
   type GlassesId,
@@ -61,15 +62,25 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
       build,
     );
   } else {
+    const slim = build === "small" || build === "thin";
     drawTrousers(g, config.trousers, config.trousersColor, skin);
     drawShoes(g, config.shoes, skin);
     drawTop(g, config.top, topColor, skin);
-    if (build === "small") {
+    if (slim) {
       clr(g, 8, 24);
       clr(g, 23, 24);
     }
+    if (build === "thin") {
+      // slimmer silhouette: rounder shoulders + arms trimmed a pixel
+      clr(g, 8, 25);
+      clr(g, 23, 25);
+      for (let y = 26; y <= 31; y++) {
+        clr(g, 5, y);
+        clr(g, 26, y);
+      }
+    }
     drawHead(g, skin);
-    if (build === "small") {
+    if (slim) {
       clr(g, 10, 21);
       clr(g, 21, 21);
       clr(g, 9, 20);
@@ -87,17 +98,12 @@ export function composeSprite(config: AvatarConfig, view: View = config.view): S
     P(g, 18, 13, 2, 2, "#fff");
     px(g, 12, 14, "#26324a");
     px(g, 18, 14, "#26324a");
-    if (build === "small") {
-      px(g, 10, 13, hairColor);
-      px(g, 10, 12, hairColor);
-      px(g, 20, 13, hairColor);
-      px(g, 20, 12, hairColor);
-    }
     drawNose(g, config.nose, skin);
     if (BEARDS.includes(accessory)) drawBeard(g, accessory as BeardId, hairColor);
     drawMouth(g, config.mouth);
     drawHair(g, config.hair, hairColor);
     if (GLASSES.includes(accessory)) drawGlasses(g, accessory as GlassesId);
+    if (accessory === "lashes") drawLashes(g, hairColor);
     drawHat(g, config.hat, topColor);
   }
 

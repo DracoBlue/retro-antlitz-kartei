@@ -121,6 +121,7 @@ const HINTS: Record<string, string> = {
   bun: "hair tied up in a bun (pulled back)",
   dress: "a long skirt / dress that covers the legs",
   "mini-skirt": "a short skirt with bare legs below",
+  lashes: "prominent eyelashes / made-up feminine eyes",
 };
 
 /** Per-field spec: the question label, allowed values, labels/hints, and optional name→hex map. */

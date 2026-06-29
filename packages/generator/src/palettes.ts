@@ -7,14 +7,14 @@
  */
 export const PARTS = {
   hat: ["none", "top-hat", "crown", "hard-hat", "peaked-cap", "tyrolean-hat", "pickelhaube", "halo"],
-  hair: ["bald", "side-part", "tousled", "mullet", "blow-wave", "mohawk", "bun", "messy", "receding"],
+  hair: ["bald", "side-part", "tousled", "mullet", "blow-wave", "mohawk", "bun", "messy", "receding", "long"],
   ears: ["normal", "sail-ears", "pointed", "small", "sticking-out", "floppy", "elf", "huge"],
   nose: ["button", "aquiline", "bulbous", "pointed", "wide", "hooked", "snub", "clown"],
   mouth: ["smile", "grimace", "pout", "grin", "scream", "line", "snarl", "whistle"],
   top: ["suit", "shirt", "uniform", "sweater", "hawaiian", "robe", "hi-vis-vest", "leather-jacket"],
   trousers: ["suit-trousers", "jeans", "cargo", "shorts", "bell-bottoms", "sweatpants", "lederhosen", "plaid", "dress", "mini-skirt"],
-  build: ["small", "medium", "large"],
-  accessory: ["none", "nerd-glasses", "round-glasses", "sunglasses", "monocle", "full-beard", "moustache", "goatee"],
+  build: ["thin", "small", "medium", "large"],
+  accessory: ["none", "nerd-glasses", "round-glasses", "sunglasses", "monocle", "full-beard", "moustache", "goatee", "lashes"],
   shoes: ["sneakers", "boots", "dress-shoes", "sandals", "heels", "rubber-boots", "clown-shoes", "none"],
 } as const;
 
@@ -27,14 +27,14 @@ export type PartId<K extends PartKey = PartKey> = (typeof PARTS)[K][number];
 /** Human-readable display labels parallel to {@link PARTS}. UI-only. */
 export const PART_LABELS: Record<PartKey, readonly string[]> = {
   hat: ["None", "Top Hat", "Crown", "Hard Hat", "Peaked Cap", "Tyrolean Hat", "Pickelhaube", "Halo"],
-  hair: ["Bald", "Side Part", "Tousled", "Mullet", "Blow Wave", "Mohawk", "Bun", "Messy", "Receding"],
+  hair: ["Bald", "Side Part", "Tousled", "Mullet", "Blow Wave", "Mohawk", "Bun", "Messy", "Receding", "Long"],
   ears: ["Normal", "Sail Ears", "Pointed", "Small", "Sticking Out", "Floppy", "Elf", "Huge"],
   nose: ["Button", "Aquiline", "Bulbous", "Pointed", "Wide", "Hooked", "Snub", "Clown"],
   mouth: ["Smile", "Grimace", "Pout", "Grin", "Scream", "Line", "Snarl", "Whistle"],
   top: ["Suit", "Shirt", "Uniform", "Sweater", "Hawaiian", "Robe", "Hi-Vis Vest", "Leather Jacket"],
   trousers: ["Suit Trousers", "Jeans", "Cargo", "Shorts", "Bell-Bottoms", "Sweatpants", "Lederhosen", "Plaid", "Dress", "Mini Skirt"],
-  build: ["Small", "Medium", "Large"],
-  accessory: ["None", "Nerd Glasses", "Round Glasses", "Sunglasses", "Monocle", "Full Beard", "Moustache", "Goatee"],
+  build: ["Thin", "Small", "Medium", "Large"],
+  accessory: ["None", "Nerd Glasses", "Round Glasses", "Sunglasses", "Monocle", "Full Beard", "Moustache", "Goatee", "Lashes"],
   shoes: ["Sneakers", "Boots", "Dress Shoes", "Sandals", "Heels", "Rubber Boots", "Clown Shoes", "Barefoot"],
 };
 

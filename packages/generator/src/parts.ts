@@ -428,6 +428,17 @@ export function drawHair(g: Ctx2D, id: PartId<"hair">, color: string): void {
       P(g, 8, 7, 1, 3, h);
       P(g, 23, 7, 1, 3, h);
       break;
+    case "long": // long hair: covers the ears and falls past the shoulders
+      P(g, 9, 5, 14, 4, h); // crown
+      P(g, 9, 5, 14, 1, hh); // highlight
+      P(g, 8, 8, 2, 13, h); // left side over the ear, down the jaw
+      P(g, 22, 8, 2, 13, h); // right side
+      P(g, 7, 20, 2, 9, h); // left length over the shoulder
+      P(g, 23, 20, 2, 9, h); // right length
+      P(g, 7, 27, 2, 2, hd); // tips shade
+      P(g, 23, 27, 2, 2, hd);
+      px(g, 15, 7, hd); // centre part hint
+      break;
     case "receding": // short, combed back, with a receding hairline (temples)
       P(g, 11, 7, 10, 1, h); // thin top, set back
       P(g, 10, 8, 12, 1, h); // hairline row across the forehead top
@@ -642,6 +653,16 @@ export function drawShoesSide(g: Ctx2D, id: PartId<"shoes">, skin: string): void
   }
 }
 
+/** Eyelashes around the eyes (front view), in the given colour. */
+export function drawLashes(g: Ctx2D, color: string): void {
+  px(g, 10, 12, color);
+  px(g, 10, 13, color);
+  px(g, 20, 12, color);
+  px(g, 20, 13, color);
+  px(g, 9, 12, color); // outer flicks
+  px(g, 21, 12, color);
+}
+
 /* ---------- side / profile view (faces right; mirrored for left) ---------- */
 
 export function drawSide(
@@ -692,6 +713,9 @@ export function drawSide(
     P(g, 9, 27, 12, 1, "#e8e8e8");
     P(g, 9, 30, 12, 1, "#e8e8e8");
   }
+  // slimmer torso in profile for slim builds (trim the front; thin also the back)
+  if (build === "small" || build === "thin") for (let y = 26; y <= 32; y++) clr(g, 20, y);
+  if (build === "thin") for (let y = 26; y <= 32; y++) clr(g, 8, y);
   // neck
   P(g, 12, 21, 5, 3, sd);
   // head (facing right)
@@ -759,7 +783,7 @@ export function drawSide(
   if (build === "large") {
     P(g, 17, 21, 4, 1, sd);
     P(g, 20, 19, 1, 2, skin);
-  } else if (build === "small") {
+  } else if (build === "small" || build === "thin") {
     clr(g, 20, 21);
     clr(g, 19, 21);
   }
@@ -794,6 +818,9 @@ export function drawSide(
       clr(g, 19, 19);
       P(g, 13, 16, 3, 4, h);
     }
+  } else if (s.accessory === "lashes") {
+    px(g, 18, 13, h);
+    px(g, 18, 12, h);
   }
   // hair
   if (s.hair !== "bald") {
@@ -807,6 +834,11 @@ export function drawSide(
       P(g, 8, 6, 9, 2, hc); // short top, recedes before the face
       P(g, 8, 8, 2, 2, hc); // upper back
       P(g, 7, 9, 2, 7, hc); // side/back down past the ear
+    } else if (s.hair === "long") {
+      P(g, 8, 6, 13, 3, hc); // top
+      P(g, 7, 8, 5, 13, hc); // back + over the ear, down the side
+      P(g, 7, 20, 4, 9, hc); // length falling over the shoulder
+      P(g, 7, 27, 4, 2, shade(hc, -0.22)); // tips
     } else {
       P(g, 8, 6, 13, 3, hc);
       P(g, 7, 8, 2, 9, hc);
