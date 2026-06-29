@@ -1,5 +1,15 @@
 # @retro-antlitz-kartei/animate
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [73ab1c6]
+- Updated dependencies [78a1e95]
+- Updated dependencies [78a1e95]
+- Updated dependencies [78a1e95]
+  - @retro-antlitz-kartei/generator@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes
