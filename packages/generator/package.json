@@ -1,6 +1,6 @@
 {
   "name": "@retro-antlitz-kartei/generator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Retro pixel-art, full-body avatar generator — deterministic from a seed, rendered to canvas.",
   "license": "MIT",
   "author": "DracoBlue",

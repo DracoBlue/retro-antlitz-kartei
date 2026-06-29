@@ -1,6 +1,6 @@
 {
   "name": "@retro-antlitz-kartei/animate",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Combat-arena pose animation for retro-antlitz-kartei avatars (idle, walk, attack, block, hit, win).",
   "license": "MIT",
   "author": "DracoBlue",

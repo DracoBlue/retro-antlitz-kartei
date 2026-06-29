@@ -1,5 +1,22 @@
 # @retro-antlitz-kartei/generator
 
+## 0.3.0
+
+### Minor Changes
+
+- 73ab1c6: Add two skirt-style `trousers` options — `dress` (a long A-line skirt) and
+  `mini-skirt` (a short skirt with bare legs) — in front and profile views. Also
+  make the hi-vis vest's centre panel follow `topColor` instead of a hardcoded
+  grey (the vest body stays safety-orange).
+- 78a1e95: Add a `lashes` accessory (eyelashes). Eyelashes are no longer tied to the build:
+  `small`/`thin` no longer draw lashes automatically — pick the `lashes` accessory
+  instead. As an accessory it is mutually exclusive with glasses and beards.
+- 78a1e95: Add a `long` hairstyle — covers the ears and falls past the shoulders, in front
+  and profile views, following `hairColor`.
+- 78a1e95: Add a `thin` build (slimmer than `small`) with a trimmed silhouette in both
+  front and profile views; `small` and `thin` now also read thinner in profile
+  (previously all builds were the same width side-on). Default build stays `medium`.
+
 ## 0.2.0
 
 ### Minor Changes
